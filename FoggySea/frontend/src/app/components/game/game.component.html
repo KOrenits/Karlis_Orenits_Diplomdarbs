@@ -9,14 +9,14 @@
         <ng-container *ngFor="let tile of tiles">
           <div class = "grid-computer defaultTile" *ngIf="!tile.selected" (click)="clickTile(tile)"></div>
           <div *ngIf="tile.selected" class="grid-computer" 
-          [ngClass]="{ 
-            'shipTile': tile.tileType == 'ship',
-            'emptyTile': tile.tileType == 'empty',
-            'goldenShipTile': tile.tileType == 'goldenShip',
-            'pirateTile': tile.tileType == 'pirate',
-            'mermaidTile': tile.tileType == 'mermaid',
-            'krakenTile': tile.tileType == 'kraken'
-          }">
+            [ngClass]="{ 
+              'shipTile': tile.tileType == 'ship',
+              'emptyTile': tile.tileType == 'empty',
+              'goldenShipTile': tile.tileType == 'goldenShip',
+              'pirateTile': tile.tileType == 'pirate',
+              'mermaidTile': tile.tileType == 'mermaid',
+              'krakenTile': tile.tileType == 'kraken'
+            }">
           </div>
     
       
@@ -24,7 +24,7 @@
       </ng-container>
     </div>
       
-    <div class="players-list" >
+    <!-- <div class="players-list" >
       <div *ngIf="!joined">
         <input type="text" [(ngModel)]="nickname" placeholder="Enter your nickname" />
         <input type="text" [(ngModel)]="room" placeholder="Enter the room name" />
@@ -36,7 +36,7 @@
           <li *ngFor="let user of users">{{ user.nickname }}</li>
         </ul>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <!-- <div id="users" class=" players-list">

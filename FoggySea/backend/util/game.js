@@ -240,16 +240,16 @@ function findNecessaryShipBorderOrExpansionTiles(tempShip, methodType) {
                 //Find Ship Border Tiles
                 if (tilesList[yMin][xMin].tileType != tileTypes.ship)
                 {
-                if (methodType == 1)
-                    tilesList[yMin][xMin].canPutShip = false;
-                else if (methodType == 2)
-                {
-                    this.tilesList[yMin][xMin].selected = true;
-                    if(this.tilesList[yMin][xMin].tileType == tileTypes.default)
+                    if (methodType == 1)
+                        tilesList[yMin][xMin].canPutShip = false;
+                    else if (methodType == 2)
                     {
-                        this.tilesList[yMin][xMin].tileType = tileTypes.empty;
+                        this.tilesList[yMin][xMin].selected = true;
+                        if(this.tilesList[yMin][xMin].tileType == tileTypes.default)
+                        {
+                            this.tilesList[yMin][xMin].tileType = tileTypes.empty;
+                        }
                     }
-                }
                 }
             }
             }

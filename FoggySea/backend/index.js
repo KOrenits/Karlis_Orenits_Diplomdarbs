@@ -14,14 +14,15 @@ io.on("connection", (socket) => {
     socket.on('startGame', ({ gameId }) => {
         createGame().then(tilesList => {
             io.to(gameId).emit('startGame', tilesList);
+            console.log(tilesList)
         })
-    })
+    });
 
     socket.on('gameUpdate', ({ gameId, tilesList, clickedTile }) => {
         updateGame(tilesList, clickedTile).then(tilesList => {
             io.to(gameId).emit(gameId, tilesList);
         })
-    })
+    });
 
     /* socket.on('gameUpdate', ({ gameId }) => {
         io.to(gameId).emit(gameId, );

@@ -14,7 +14,7 @@ export class SocketioService {
 
   connect(gameId) {
     this.socket = io('http://localhost:3000')
-    this.socket.emit('joinGame', { gameId: gameId });
+    this.socket.emit('joinRoom', { gameId: gameId });
   }
 
   joinRoom(nickname, gameId) {

@@ -7,37 +7,14 @@ import { SocketioService } from 'src/app/services/socketio.service';
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css'],
-  template: `
-    <div *ngIf="!joined">
-      <h1>Enter your nickname and room name</h1>
-      <input type="text" [(ngModel)]="nickname" placeholder="Enter your nickname" />
-      <br /><br />
-      <input type="text" [(ngModel)]="room" placeholder="Enter the room name" />
-      <br /><br />
-      <button (click)="joinRoom()">Join</button>
-    </div>
-
-    <div *ngIf="joined">
-      <h1>Users in room {{ room }}</h1>
-      <ul>
-        <li *ngFor="let user of users">{{ user }}</li>
-      </ul>
-    </div>
-  `,
 })
+
 export class GameComponent implements OnInit {
     gameId: string;
     tilesList;
     tile;
     isGameStarted: boolean = false;
     clickedTile;
-
-
-  nickname: string;
-  room: string;
-  joined: boolean = false;
-  users: any[] = [];
-
 
   constructor(
     private socketIoService: SocketioService,
@@ -53,8 +30,6 @@ export class GameComponent implements OnInit {
     this.recieveGameUpdate(); 
   } 
 
-
-
    nextGame() {
     this.socketIoService.startGame(this.gameId);
   }
@@ -62,7 +37,7 @@ export class GameComponent implements OnInit {
   startGame() {
     this.isGameStarted = true;
     this.socketIoService.startGame(this.gameId);
-    console.log()
+    console.log(this.tilesList);
   }
 
   clickTile(tile) {
@@ -80,7 +55,6 @@ export class GameComponent implements OnInit {
   recieveStartGame() {
     this.socketIoService.recieveStartGame().subscribe((tilesList) => {
       this.tilesList = tilesList;
-      console.log(this.tilesList);
     });
   }
 
@@ -91,8 +65,4 @@ export class GameComponent implements OnInit {
     });
   } 
   
-  joinRoom() {
-    this.socketIoService.joinRoom(this.nickname, this.gameId);
-    this.joined = true;
-  }
 }
