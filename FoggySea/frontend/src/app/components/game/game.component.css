@@ -1,0 +1,68 @@
+.game {
+  margin: 5%;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.players-list{
+  width:30%;
+  padding: 5% 0% 15% 0%;
+}
+
+.main-container{
+  display: flex;
+  margin: 0% 15% 15% 15%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1px;
+  padding: 5% 10% 15% 15%;
+  width: 100%;
+}
+
+.grid-computer {
+  aspect-ratio: 1/ 1;
+  display: flex;
+  align-items: center;
+  padding: 2%;
+}
+
+.defaultTile {
+  background-color: gray;
+}
+
+.shipTile{
+  background-color: cyan;
+}
+
+.emptyTile{
+  background-color: blue;
+}
+
+.goldenShipTile{
+  background-color: gold;
+}
+
+.pirateTile{
+  background-color: black;
+}
+
+.mermaidTile{
+  background-color: red;
+}
+
+.krakenTile{
+  background-color: purple;
+}
+
+
+
+.nextgame {
+  float: right;
+}
