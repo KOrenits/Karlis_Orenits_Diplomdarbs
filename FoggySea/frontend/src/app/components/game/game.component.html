@@ -1,7 +1,17 @@
 <div class="game">
-  <div class="center">
-    <button mat-raised-button (click)="startGame()">Start game</button>
-  </div>
+  <!-- <div class="center" >
+    <button mat-raised-button (click)="startGame()" *ngIf="!isGameStarted && user.isHost">Start game</button>
+  </div> -->
+ <!--  <ng-container *ngFor="let user of usersList">
+    <div class="center" *ngIf="!isGameStarted && user.isHost">
+      <button mat-raised-button (click)="startGame()">Start game</button>
+    </div>
+  </ng-container> -->
+  <ng-container *ngIf="!isGameStarted">
+    <div class="center">
+      <button mat-raised-button (click)="startGame()">Start game</button>
+    </div>
+  </ng-container>
 
   <div class="main-container" *ngIf="isGameStarted">
     <div class="grid">
@@ -17,12 +27,30 @@
               'mermaidTile': tile.tileType == 'mermaid',
               'krakenTile': tile.tileType == 'kraken'
             }">
-          </div>
-    
-      
+          </div>  
         </ng-container>
-      </ng-container>
+      </ng-container> 
     </div>
+    <div class=" users players-list">
+      <ul>
+        <li *ngFor="let user of usersList">{{ user.nickname }}</li>
+      </ul>
+    </div> 
+  </div>
+
+  <div class="main-container" *ngIf="!isGameStarted">
+    <div class="box">
+      <p>Waiting for host to start the game</p>
+    </div>
+    <div class=" users players-list">
+      <ul>
+        <li *ngFor="let user of usersList">{{ user.nickname }}</li>
+      </ul>
+    </div> 
+  </div>
+</div>
+
+
       
     <!-- <div class="players-list" >
       <div *ngIf="!joined">
@@ -37,7 +65,7 @@
         </ul>
       </div>
     </div> -->
-  </div>
+
 
   <!-- <div id="users" class=" players-list">
     lalala
@@ -46,7 +74,7 @@
   <button mat-raised-button class="nextgame">
     Next game
   </button> -->
-</div>
+
 
 
 

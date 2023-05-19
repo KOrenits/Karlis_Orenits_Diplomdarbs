@@ -33,6 +33,19 @@
   padding: 2%;
 }
 
+.box{
+  aspect-ratio: 1/ 1;
+  padding: 10% 10% 10% 10%;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 5% 10% 15% 15%;
+}
+
 .defaultTile {
   background-color: gray;
 }
@@ -60,8 +73,6 @@
 .krakenTile{
   background-color: purple;
 }
-
-
 
 .nextgame {
   float: right;

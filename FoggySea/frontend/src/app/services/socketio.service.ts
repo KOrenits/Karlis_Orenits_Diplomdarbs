@@ -9,16 +9,16 @@ import { ObserversModule } from '@angular/cdk/observers';
 })
 export class SocketioService {
   socket: Socket;
+  nickname;
+  gameId;
 
   constructor() {}
 
-  connect(gameId) {
+  connect(gameId, nickname) {
+    this.gameId = gameId;
+    this.nickname = nickname;
     this.socket = io('http://localhost:3000')
-    this.socket.emit('joinRoom', { gameId: gameId });
-  }
-
-  joinRoom(nickname, gameId) {
-    this.socket.emit('joinRoom', { nickname: nickname, gameId: gameId });
+    this.socket.emit('joinRoom', {nickname: this.nickname, gameId: this.gameId });
   }
 
   startGame(gameId) {
@@ -30,13 +30,14 @@ export class SocketioService {
     tilesList = tilesList;
   }
 
-  recieveJoinedPlayers() {
+  recieveJoinedPlayers(): Observable<any> {
     return new Observable((observer) => {
-      this.socket.on('joinGame', (message) => {
-        observer.next(message);
+      this.socket.on('users', (usersList) => {
+        observer.next(usersList);
       });
     });
   }
+
 
   recieveStartGame() {
     return new Observable((observer) => {
@@ -52,5 +53,9 @@ export class SocketioService {
         observer.next(tilesList);
       });
     });
+  }
+
+  requestUsers(gameId: string): void {
+    this.socket.emit('requestUsers', { gameId });
   }
 }

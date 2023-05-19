@@ -78,8 +78,6 @@ function createGame() {
 }
 
 function updateGame(tilesList, clickedTile) {
-   //console.log(createdTilesList);
-   //console.log(clickedTile);
     return new Promise(function (resolve,reject){
     this.tilesList= tilesList;
     controlIfShipDestroyed(tilesList, clickedTile);
@@ -109,7 +107,6 @@ function controlIfShipDestroyed(tilesList, clickedTile){
     }
     else if (currentTile.tileType == tileTypes.ship || currentTile.tileType == tileTypes.goldenShip)
     {
-        console.log(currentShip);
         var shipIsDestroyed = true;
         currentShip.forEach(tile =>{
         if (!tile.selected )
@@ -130,7 +127,6 @@ function controlIfShipDestroyed(tilesList, clickedTile){
 
 
 function  fillRestOfRemainingTiles(){
-    console.log("4");
     for (var y = 0; y < gameSettings.rows; ++y)
     {
         for (var x = 0; x < gameSettings.columns; ++x)
@@ -326,9 +322,44 @@ function  createGoldenShips()
     createSpecialTiles(tileTypes.ship, tileTypes.goldenShip, gameSettings.goldenShips);
     }
 
+    function addUser(usersList, nickname, gameId) {
+        listLength = usersList.length;
+        addAnotherUser = true;
+        isValueHost = true;
+
+        if(listLength != 0)
+        {
+            isValueHost = false;
+            usersList.forEach(user =>
+            {
+                if(user.nickname == nickname)
+                {
+                    addAnotherUser = false;
+                }
+            });    
+        }
+        if(addAnotherUser)
+        {
+            var object1 = {
+                playerId: listLength,
+                isHost: isValueHost,
+                nickname: nickname,
+                gameId: gameId,
+                points: 0,
+                currentTurn: false,
+                skippedTurn: false
+            }
+            
+            usersList.push(object1)
+        }
+        
+        return usersList;
+    }
+
     module.exports = {
         createGame,
-        updateGame
+        updateGame,
+        addUser
     };
 
 
@@ -422,6 +453,10 @@ function  createGoldenShips()
 // module.exports = {
 //     createGame
 // };
+
+
+
+
 
 
 
