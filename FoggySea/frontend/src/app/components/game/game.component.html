@@ -7,7 +7,7 @@
       <button mat-raised-button (click)="startGame()">Start game</button>
     </div>
   </ng-container> -->
-  <ng-container *ngIf="!isGameStarted">
+  <ng-container *ngIf="!isGameStarted && isHostUser">
     <div class="center">
       <button mat-raised-button (click)="startGame()">Start game</button>
     </div>
@@ -31,22 +31,32 @@
         </ng-container>
       </ng-container> 
     </div>
-    <div class=" users players-list">
+    <div class="users players-list">
       <ul>
-        <li *ngFor="let user of usersList">{{ user.nickname }}</li>
+        <li *ngFor="let user of usersList">
+          <span *ngIf="user.currentTurn" class="checkmark">&#10004;</span>
+          <span [ngClass]="{
+            'nicknameTurn': user.currentTurn,
+            'nicknameNoTurn': !user.currentTurn
+          }">{{ user.nickname }}</span> 
+          
+          - Points: {{ user.points }}
+        </li>
       </ul>
-    </div> 
+    </div>
   </div>
 
   <div class="main-container" *ngIf="!isGameStarted">
     <div class="box">
       <p>Waiting for host to start the game</p>
     </div>
-    <div class=" users players-list">
+    <div class="users players-list">
       <ul>
-        <li *ngFor="let user of usersList">{{ user.nickname }}</li>
+        <li *ngFor="let user of usersList">
+          {{ user.nickname }} - Points: {{ user.points }}
+        </li>
       </ul>
-    </div> 
+    </div>
   </div>
 </div>
 

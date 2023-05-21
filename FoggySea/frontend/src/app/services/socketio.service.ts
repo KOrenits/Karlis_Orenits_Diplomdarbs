@@ -9,25 +9,18 @@ import { ObserversModule } from '@angular/cdk/observers';
 })
 export class SocketioService {
   socket: Socket;
-  nickname;
-  gameId;
 
   constructor() {}
 
   connect(gameId, nickname) {
-    this.gameId = gameId;
-    this.nickname = nickname;
     this.socket = io('http://localhost:3000')
-    this.socket.emit('joinRoom', {nickname: this.nickname, gameId: this.gameId });
+    this.socket.emit('joinRoom', {nickname: nickname, gameId: gameId });
   }
 
-  startGame(gameId) {
-    this.socket.emit('startGame', { gameId: gameId });
-  }
 
-  sendGameUpdate(gameId, tilesList, clickedTile) {
-    this.socket.emit('gameUpdate', { gameId: gameId, tilesList: tilesList, clickedTile: clickedTile });
-    tilesList = tilesList;
+
+  sendGameUpdate(gameId, tilesList, clickedTile, usersList, currentUser) {
+    this.socket.emit('gameUpdate', { gameId: gameId, tilesList: tilesList, clickedTile: clickedTile, usersList: usersList, currentUser: currentUser });
   }
 
   recieveJoinedPlayers(): Observable<any> {
@@ -38,22 +31,25 @@ export class SocketioService {
     });
   }
 
-
-  recieveStartGame() {
-    return new Observable((observer) => {
-      this.socket.on('startGame', (tilesList) => {
-        observer.next(tilesList);
-      });
-    });
+  startGame(gameId, isGameStarted) {
+    this.socket.emit('startGame', { gameId: gameId, isGameStarted: isGameStarted });
   }
 
-  recieveGameUpdate(gameId) {
-    return new Observable((observer) => {
-      this.socket.on(gameId, (tilesList) => {
-        observer.next(tilesList);
-      });
+recieveStartGame() {
+  return new Observable((observer) => {
+    this.socket.on('startGame', ({ tilesList, isGameStarted }) => {
+      observer.next({ tilesList, isGameStarted });
     });
-  }
+  });
+}
+
+recieveGameUpdate(gameId) {
+  return new Observable((observer) => {
+    this.socket.on(gameId, ({ tilesList, usersList, currentUser }) => {
+      observer.next({ tilesList, usersList, currentUser });
+    });
+  });
+}
 
   requestUsers(gameId: string): void {
     this.socket.emit('requestUsers', { gameId });

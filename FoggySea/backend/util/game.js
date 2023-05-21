@@ -41,6 +41,7 @@ var tilesList = []
 
 var tempTileList = []
 var tempShip = []
+var earnedPoints;
 
 function createGame() {
     return new Promise(function (resolve,reject){
@@ -77,17 +78,73 @@ function createGame() {
     });
 }
 
-function updateGame(tilesList, clickedTile) {
+function updateGame(tilesList, clickedTile, usersList, currentUser) {
     return new Promise(function (resolve,reject){
-    this.tilesList= tilesList;
+    this.tilesList = tilesList;
     controlIfShipDestroyed(tilesList, clickedTile);
-    resolve(tilesList);
+
+    if (earnedPoints > 0) 
+    {
+        //console.log(earnedPoints);
+        currentUser.points = currentUser.points + earnedPoints;
+        //console.log(currentUser);
+        //console.log(usersList);
+        const updatedUsers =  usersList.map((user) => {
+            if (user.playerId == currentUser.playerId) {
+                return { ...currentUser };
+            }
+            return user;
+        });
+        usersList = updatedUsers;
+        earnedPoints = 0;
+    } 
+    else 
+    {
+        currentUser.currentTurn = false;
+        const updatedUsers =  usersList.map((user) => {
+            if (user.playerId == currentUser.playerId) {
+                return { ...currentUser };
+            }
+            return user;
+        });
+        usersList = updatedUsers;
+        var nextPlayerId = currentUser.playerId;
+        if (nextPlayerId == usersList.length - 1) 
+        {
+            nextPlayerId = 0;
+        } 
+        else 
+        {
+            nextPlayerId = currentUser.playerId + 1;
+        }
+        var nextUser = usersList.find((user) => user.playerId == nextPlayerId);
+        nextUser.currentTurn = true;
+        const newUpdatedUsers =  usersList.map((user) => {
+            if (user.playerId == nextUser.playerId) {
+                return { ...nextUser };
+            }
+            return user;
+        });
+        usersList = newUpdatedUsers;
+        currentUser = nextUser;
+    }
+
+
+    resolve({ tilesList: tilesList, usersList: usersList, currentUser: currentUser });
     });
-} 
+}
+
+function mapUsers(usersList, currentUser)
+{
+    
+    //console.log("4");
+    //console.log(currentUser);
+        //console.log(usersList);
+}
 
 function controlIfShipDestroyed(tilesList, clickedTile){
     var currentShip = [];
-    var currentTile
+    var currentTile = [];
     tilesList.forEach(ship =>{
         ship.forEach(tile =>{
             if(tile.shipId == clickedTile.shipId)
@@ -107,6 +164,14 @@ function controlIfShipDestroyed(tilesList, clickedTile){
     }
     else if (currentTile.tileType == tileTypes.ship || currentTile.tileType == tileTypes.goldenShip)
     {
+        if(currentTile.tileType == tileTypes.ship)
+        {
+            earnedPoints = 1;
+        }
+        else
+        {
+            earnedPoints = 2;
+        }
         var shipIsDestroyed = true;
         currentShip.forEach(tile =>{
         if (!tile.selected )
@@ -325,13 +390,17 @@ function  createGoldenShips()
     function addUser(usersList, nickname, gameId) {
         listLength = usersList.length;
         addAnotherUser = true;
-        isValueHost = true;
+        isHost = true;
+        isCurrentTurn = true;
 
         if(listLength != 0)
         {
-            isValueHost = false;
+            isHost = false;
+            isCurrentTurn = false;
+            console.log("2");
             usersList.forEach(user =>
             {
+                console.log("1");
                 if(user.nickname == nickname)
                 {
                     addAnotherUser = false;
@@ -342,18 +411,20 @@ function  createGoldenShips()
         {
             var object1 = {
                 playerId: listLength,
-                isHost: isValueHost,
+                isHost: isHost,
                 nickname: nickname,
                 gameId: gameId,
                 points: 0,
-                currentTurn: false,
+                currentTurn: isCurrentTurn,
                 skippedTurn: false
             }
             
-            usersList.push(object1)
+            return object1;
         }
-        
-        return usersList;
+        else
+        {
+            return 1;
+        }
     }
 
     module.exports = {

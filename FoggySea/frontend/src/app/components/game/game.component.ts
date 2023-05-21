@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocketioService } from 'src/app/services/socketio.service';
 import { SharedDataService } from 'src/app/services/shared-data.service';
+import { MaterialModule } from 'src/app/material/material.module';
 
 @Component({
   selector: 'app-game',
@@ -14,18 +15,20 @@ export class GameComponent implements OnInit {
     gameId;
     nickname;
     tilesList;
-    usersList;
+    usersList = [];
     tile;
     isGameStarted: boolean = false;
     isHostUser: boolean = false;
     clickedTile;
+    currentUser;
 
   constructor(
     private socketIoService: SocketioService,
     private activatedRoute: ActivatedRoute,
     private snackbar: MatSnackBar,
     private router: Router,
-    private sharedDataService: SharedDataService
+    private sharedDataService: SharedDataService,
+    private materialModule: MaterialModule,
   ) {}
 
   ngOnInit(): void {
@@ -43,43 +46,64 @@ export class GameComponent implements OnInit {
         this.nickname = this.sharedDataService.getNickname(); 
 
         this.socketIoService.connect(this.gameId, this.nickname);
-        this.socketIoService.requestUsers(this.gameId);
+
+        //this.socketIoService.requestUsers(this.gameId);
         this.recieveJoinedPlayers();
         this.recieveStartGame();
         this.recieveGameUpdate();
   }
 
-  nextGame() {
-    this.socketIoService.startGame(this.gameId);
-  }
-
-  startGame() {
-    this.isGameStarted = true;
-    this.socketIoService.startGame(this.gameId);
-  }
   
   clickTile(tile) {
-    this.socketIoService.sendGameUpdate(this.gameId, this.tilesList, tile);
+    const currentUser = this.usersList.find((user) => user.currentTurn);
+  
+    if (!currentUser || currentUser.nickname !== this.nickname) {
+      this.snackbar.open('It is not your turn to click the tile.', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      });
+      return;
+    }
+  
+    // Only the current user can send the game update
+    this.socketIoService.sendGameUpdate(this.gameId, this.tilesList, tile, this.usersList, currentUser);
   }
 
   recieveJoinedPlayers() {
     this.socketIoService.recieveJoinedPlayers().subscribe((usersList) => {
       this.usersList = usersList;
-      console.log(this.usersList);
-      
-      //this.isHostUser = usersList.find((user) => user.isHost)?.nickname === this.nickname;
+     
+      this.isHostUser = usersList.find((user) => user.isHost)?.nickname === this.nickname;
     });
+  }
+
+  startGame() {
+    if (this.usersList.length < 2) {
+      this.snackbar.open('Need at least 2 players to start the game', 'Close', {
+        duration: 5000, // Duration in milliseconds
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      });
+      return;
+    }
+    this.socketIoService.startGame(this.gameId, this.isGameStarted);
+    this.currentUser = this.usersList.find(user => user.playerId == 0);
+    
   }
 
   recieveStartGame() {
-    this.socketIoService.recieveStartGame().subscribe((tilesList) => {
-      this.tilesList = tilesList;
-    });
-  }
+  this.socketIoService.recieveStartGame().subscribe((data: { tilesList: any, isGameStarted: any }) => {
+    this.tilesList = data.tilesList;
+    this.isGameStarted = data.isGameStarted;
+  });
+}
 
-  recieveGameUpdate() {
-    this.socketIoService.recieveGameUpdate(this.gameId).subscribe((tilesList) => {
-      this.tilesList = tilesList;
-    });
-  }  
+recieveGameUpdate() {
+  this.socketIoService.recieveGameUpdate(this.gameId).subscribe((data: { tilesList: any, usersList: any, currentUser: any }) => {
+    this.tilesList = data.tilesList;
+    this.usersList = data.usersList;
+    this.currentUser = data.currentUser;
+  });
+}
 }
