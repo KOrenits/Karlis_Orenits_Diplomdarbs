@@ -9,6 +9,7 @@ import { ObserversModule } from '@angular/cdk/observers';
 })
 export class SocketioService {
   socket: Socket;
+  isGameStarted;
 
   constructor() {}
 

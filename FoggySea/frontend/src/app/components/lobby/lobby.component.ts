@@ -68,7 +68,7 @@ export class LobbyComponent implements OnInit {
     }
 
   var usersCount = this.sharedDataService.getUsersListCount();
-  if (usersCount > 6) {
+  if (usersCount > 5) {
     // Maximum user count reached
     this.matsnackBar.open('Cannot join the room, maximum users reached', 'Close', {
       duration: 3000,
@@ -79,7 +79,6 @@ export class LobbyComponent implements OnInit {
   }
   
     // Set the nickname and gameId in the shared data service
-    this.sharedDataService.setUsersListCount(usersCount + 1);
     this.sharedDataService.setNickname(nickname);
     this.sharedDataService.setGameId(gameId);
   

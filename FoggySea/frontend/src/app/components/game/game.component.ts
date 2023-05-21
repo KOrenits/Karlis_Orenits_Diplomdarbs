@@ -46,7 +46,6 @@ export class GameComponent implements OnInit {
         this.nickname = this.sharedDataService.getNickname(); 
 
         this.socketIoService.connect(this.gameId, this.nickname);
-
         //this.socketIoService.requestUsers(this.gameId);
         this.recieveJoinedPlayers();
         this.recieveStartGame();
@@ -55,9 +54,9 @@ export class GameComponent implements OnInit {
 
   
   clickTile(tile) {
-    const currentUser = this.usersList.find((user) => user.currentTurn);
+   this.currentUser = this.usersList.find((user) => user.currentTurn);
   
-    if (!currentUser || currentUser.nickname !== this.nickname) {
+    if (!this.currentUser || this.currentUser.nickname !== this.nickname) {
       this.snackbar.open('It is not your turn to click the tile.', 'Close', {
         duration: 3000,
         horizontalPosition: 'center',
@@ -67,7 +66,7 @@ export class GameComponent implements OnInit {
     }
   
     // Only the current user can send the game update
-    this.socketIoService.sendGameUpdate(this.gameId, this.tilesList, tile, this.usersList, currentUser);
+    this.socketIoService.sendGameUpdate(this.gameId, this.tilesList, tile, this.usersList, this.currentUser);
   }
 
   recieveJoinedPlayers() {
@@ -75,11 +74,12 @@ export class GameComponent implements OnInit {
       this.usersList = usersList;
      
       this.isHostUser = usersList.find((user) => user.isHost)?.nickname === this.nickname;
+      this.sharedDataService.setUsersListCount(this.usersList.length); 
     });
   }
 
   startGame() {
-    if (this.usersList.length < 2) {
+    if (this.sharedDataService.getUsersListCount() < 2) {
       this.snackbar.open('Need at least 2 players to start the game', 'Close', {
         duration: 5000, // Duration in milliseconds
         horizontalPosition: 'center',
@@ -87,9 +87,9 @@ export class GameComponent implements OnInit {
       });
       return;
     }
+    this.isGameStarted = true;
     this.socketIoService.startGame(this.gameId, this.isGameStarted);
     this.currentUser = this.usersList.find(user => user.playerId == 0);
-    
   }
 
   recieveStartGame() {
