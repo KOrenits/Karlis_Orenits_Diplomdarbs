@@ -1,11 +1,28 @@
-<div class="box">
-  <input class="element" type="text" id="nickname" placeholder="Type your nickname here">
-  <div class="element">
-    <button mat-raised-button (click)="createGame()">Create game</button>
-  </div>
-  <div class="element">
-    <input type="text" id="gamelink" placeholder="copy link here to join other game">
-    <button mat-raised-button (click)="joinGame()">Join game</button>
-  </div>
+<div class="container">
+	<div class="header">
+		<img src="../../../assets/logo.png" alt="Logo">
+		<button mat-raised-button color="accent">Noteikumi</button>
+	</div>
+	<div class="main">
+		<div class="flex">
+			<mat-form-field>
+				<mat-label>Segvārds<span class="red">*</span></mat-label>
+				<input matInput type="text" id="nickname" placeholder="KeiOOO">
+			</mat-form-field>
+			<button mat-raised-button color="primary" (click)="createGame()">Izveidot spēles
+				istabu</button>
+		</div>
+		<div class="flex">
+			<mat-form-field>
+				<mat-label>Istabas ID</mat-label>
+				<input matInput type="text" id="gamelink" placeholder="e51052ab-da2b-4441-b7d9-bd6dabde178d">
+			</mat-form-field>
+			<button mat-raised-button color="primary" (click)="joinGame()">Pievienoties spēles
+				istabai</button>
+		</div>
+		<img src="../../../assets/battleship.png" alt="Battleship">
+	</div>
+	<div class="footer">
+		<p>Foggy sea © 2023</p>
+	</div>
 </div>
-  

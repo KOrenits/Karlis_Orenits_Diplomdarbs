@@ -1,4 +1,53 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.header {
+  background-color: #90e0ef;
+  display: flex;
+  justify-content: space-around;
+}
+
+.header button {
+  margin-top: 55px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 auto;
+}
+
+.footer {
+  background-color: #00b4d8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+}
+
+.footer p {
+  color: #edede9;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin: 0;
+}

@@ -78,70 +78,6 @@ function createGame() {
     });
 }
 
-function updateGame(tilesList, clickedTile, usersList, currentUser) {
-    return new Promise(function (resolve,reject){
-    this.tilesList = tilesList;
-    controlIfShipDestroyed(tilesList, clickedTile);
-
-    if (earnedPoints > 0) 
-    {
-        //console.log(earnedPoints);
-        currentUser.points = currentUser.points + earnedPoints;
-        //console.log(currentUser);
-        //console.log(usersList);
-        const updatedUsers =  usersList.map((user) => {
-            if (user.playerId == currentUser.playerId) {
-                return { ...currentUser };
-            }
-            return user;
-        });
-        usersList = updatedUsers;
-        earnedPoints = 0;
-    } 
-    else 
-    {
-        currentUser.currentTurn = false;
-        const updatedUsers =  usersList.map((user) => {
-            if (user.playerId == currentUser.playerId) {
-                return { ...currentUser };
-            }
-            return user;
-        });
-        usersList = updatedUsers;
-        var nextPlayerId = currentUser.playerId;
-        if (nextPlayerId == usersList.length - 1) 
-        {
-            nextPlayerId = 0;
-        } 
-        else 
-        {
-            nextPlayerId = currentUser.playerId + 1;
-        }
-        var nextUser = usersList.find((user) => user.playerId == nextPlayerId);
-        nextUser.currentTurn = true;
-        const newUpdatedUsers =  usersList.map((user) => {
-            if (user.playerId == nextUser.playerId) {
-                return { ...nextUser };
-            }
-            return user;
-        });
-        usersList = newUpdatedUsers;
-        currentUser = nextUser;
-    }
-
-
-    resolve({ tilesList: tilesList, usersList: usersList, currentUser: currentUser });
-    });
-}
-
-function mapUsers(usersList, currentUser)
-{
-    
-    //console.log("4");
-    //console.log(currentUser);
-        //console.log(usersList);
-}
-
 function controlIfShipDestroyed(tilesList, clickedTile){
     var currentShip = [];
     var currentTile = [];
@@ -427,10 +363,79 @@ function  createGoldenShips()
         }
     }
 
+    function updateGame(tilesList, clickedTile, usersList, currentUser) {
+        return new Promise(function (resolve,reject){
+        this.tilesList = tilesList;
+        controlIfShipDestroyed(tilesList, clickedTile);
+    
+        if (earnedPoints > 0) 
+        {
+            //console.log(earnedPoints);
+            currentUser.points = currentUser.points + earnedPoints;
+            //console.log(currentUser);
+            //console.log(usersList);
+            const updatedUsers =  usersList.map((user) => {
+                if (user.playerId == currentUser.playerId) {
+                    return { ...currentUser };
+                }
+                return user;
+            });
+            usersList = updatedUsers;
+            earnedPoints = 0;
+        } 
+        else 
+        {
+            currentUser.currentTurn = false;
+            const updatedUsers =  usersList.map((user) => {
+                if (user.playerId == currentUser.playerId) {
+                    return { ...currentUser };
+                }
+                return user;
+            });
+            usersList = updatedUsers;
+            var nextPlayerId = currentUser.playerId;
+            if (nextPlayerId == usersList.length - 1) 
+            {
+                nextPlayerId = 0;
+            } 
+            else 
+            {
+                nextPlayerId = currentUser.playerId + 1;
+            }
+            var nextUser = usersList.find((user) => user.playerId == nextPlayerId);
+            nextUser.currentTurn = true;
+            const newUpdatedUsers =  usersList.map((user) => {
+                if (user.playerId == nextUser.playerId) {
+                    return { ...nextUser };
+                }
+                return user;
+            });
+            usersList = newUpdatedUsers;
+            currentUser = nextUser;
+        }
+    
+    
+        resolve({ tilesList: tilesList, usersList: usersList, currentUser: currentUser });
+        });
+    }
+
+    function createNewHost(usersList)
+    {
+        for (let i = 0; i < usersList.length; i++) {
+            usersList[i].playerId = i;
+            if(usersList[i].playerId == 0)
+            {
+                usersList[i].isHost = true;
+            }
+        }
+        return usersList;
+    }
+
     module.exports = {
         createGame,
         updateGame,
-        addUser
+        addUser,
+        createNewHost
     };
 
 

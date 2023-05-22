@@ -26,7 +26,7 @@ export class LobbyComponent implements OnInit {
     const nickname = (document.getElementById('nickname') as HTMLInputElement).value;
     if (!nickname) {
       // Game ID is empty
-      this.matsnackBar.open('Please enter a nickname', 'Close', {
+      this.matsnackBar.open('Lūdzu ievadiet segvārdu', 'Aizvērt', {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'bottom',

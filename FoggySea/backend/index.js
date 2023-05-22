@@ -8,6 +8,7 @@ var users = {};
 const { createGame } = require('./util/game.js');
 const { updateGame } = require('./util/game.js');
 const { addUser } = require('./util/game.js');
+const {createNewHost } = require('./util/game.js');
 
 io.on("connection", (socket) => {
     console.log("a user connected");
@@ -61,6 +62,25 @@ io.on("connection", (socket) => {
 
     socket.on('requestUsers', ({ gameId }) => {
         io.to(gameId).emit('users', users[gameId] || []);
+      });
+
+      socket.on('leave', ({usersList, leavingUser, gameId }) => {
+        console.log("leave");
+        console.log(leavingUser);
+        // Find the user in the users array and remove them
+        console.log(usersList)
+        
+        const disconnectedUser = users[gameId].find((user) => user.playerId === leavingUser.playerId);
+        if (disconnectedUser) {
+          const userIndex = users[gameId].indexOf(disconnectedUser);
+          users[gameId].splice(userIndex, 1);
+          if(leavingUser.playerId == 0){
+            createNewHost(users[gameId]);
+          }
+          io.to(gameId).emit('users', users[gameId]);   
+        }
+        
+        console.log(users[gameId]);
       });
 });
 

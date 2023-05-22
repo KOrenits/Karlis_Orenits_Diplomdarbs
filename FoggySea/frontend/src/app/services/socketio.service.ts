@@ -55,4 +55,9 @@ recieveGameUpdate(gameId) {
   requestUsers(gameId: string): void {
     this.socket.emit('requestUsers', { gameId });
   }
+
+  leaveRoom(usersList, leavingUser,gameId)
+  {
+    this.socket.emit('leave', {usersList: usersList, leavingUser: leavingUser, gameId: gameId});
+  }
 }

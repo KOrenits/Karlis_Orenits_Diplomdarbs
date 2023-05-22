@@ -1,68 +1,74 @@
-<div class="game">
-  <!-- <div class="center" >
-    <button mat-raised-button (click)="startGame()" *ngIf="!isGameStarted && user.isHost">Start game</button>
-  </div> -->
- <!--  <ng-container *ngFor="let user of usersList">
-    <div class="center" *ngIf="!isGameStarted && user.isHost">
+<div class="container">
+	<div class="header">
+		<img src="../../../assets/logo.png" alt="Logo">
+	
+	</div>
+  <ng-container *ngIf="!isGameStarted && pageUser?.isHost">
       <button mat-raised-button (click)="startGame()">Start game</button>
-    </div>
-  </ng-container> -->
-  <ng-container *ngIf="!isGameStarted && isHostUser">
-    <div class="center">
-      <button mat-raised-button (click)="startGame()">Start game</button>
-    </div>
   </ng-container>
+	<div class="main-container" *ngIf="isGameStarted">
+		<div class="grid">
+			<ng-container *ngFor="let tiles of tilesList">
+				<ng-container *ngFor="let tile of tiles">
+					<div class="grid-computer defaultTile" *ngIf="!tile.selected" (click)="clickTile(tile)"></div>
+					<div *ngIf="tile.selected" class="grid-computer" [ngClass]="{ 
+																				'shipTile': tile.tileType == 'ship',
+																				'emptyTile': tile.tileType == 'empty',
+																				'goldenShipTile': tile.tileType == 'goldenShip',
+																				'pirateTile': tile.tileType == 'pirate',
+																				'mermaidTile': tile.tileType == 'mermaid',
+																				'krakenTile': tile.tileType == 'kraken'
+																				}">
+					</div>
+				</ng-container>
+			</ng-container>
+		</div>
+		<div class="users players-list">
+			<h4>Pieslēgušies spēlētāji</h4>
+			<ul>
+				<li *ngFor="let user of usersList">
+					<span *ngIf="user.currentTurn" class="checkmark">&#10004;&nbsp;</span>
+					<span [ngClass]="{
+									'nicknameTurn': user.currentTurn,
+									'nicknameNoTurn': !user.currentTurn
+          							}">{{ user.nickname }}</span>
 
-  <div class="main-container" *ngIf="isGameStarted">
-    <div class="grid">
-      <ng-container *ngFor="let tiles of tilesList">
-        <ng-container *ngFor="let tile of tiles">
-          <div class = "grid-computer defaultTile" *ngIf="!tile.selected" (click)="clickTile(tile)"></div>
-          <div *ngIf="tile.selected" class="grid-computer" 
-            [ngClass]="{ 
-              'shipTile': tile.tileType == 'ship',
-              'emptyTile': tile.tileType == 'empty',
-              'goldenShipTile': tile.tileType == 'goldenShip',
-              'pirateTile': tile.tileType == 'pirate',
-              'mermaidTile': tile.tileType == 'mermaid',
-              'krakenTile': tile.tileType == 'kraken'
-            }">
-          </div>  
-        </ng-container>
-      </ng-container> 
-    </div>
-    <div class="users players-list">
-      <ul>
-        <li *ngFor="let user of usersList">
-          <span *ngIf="user.currentTurn" class="checkmark">&#10004;</span>
-          <span [ngClass]="{
-            'nicknameTurn': user.currentTurn,
-            'nicknameNoTurn': !user.currentTurn
-          }">{{ user.nickname }}</span> 
-          
-          - Points: {{ user.points }}
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="main-container" *ngIf="!isGameStarted">
-    <div class="box">
-      <p>Waiting for host to start the game</p>
-    </div>
-    <div class="users players-list">
-      <ul>
-        <li *ngFor="let user of usersList">
-          {{ user.nickname }} - Points: {{ user.points }}
-        </li>
-      </ul>
-    </div>
-  </div>
+					- Punkti: {{ user.points }}
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="main-container" *ngIf="!isGameStarted">
+		<div class="box">
+      <p *ngIf="pageUser?.isHost">Spēlētāji gaida, kad uzsāksiet spēli</p>
+			<p *ngIf="!pageUser?.isHost">Gaida kamēr {{hostUser?.nickname}} uzsāks spēli</p>
+			<span class="loader"></span>
+		</div>
+		<div class="users players-list">
+			<h4>Pieslēgušies spēlētāji</h4>
+			<ul>
+				<li *ngFor="let user of usersList">
+					{{ user.nickname }} - Punkti: {{ user.points }}
+				</li>
+			</ul>
+		</div>
+      <button mat-raised-button color="warn" (click)="leaveRoom(pageUser)">Leave</button>
+	</div>
+	<div class="footer">
+		<p>Foggy sea © 2023</p>
+	</div>
 </div>
 
+<!-- <div class="center" >
+  <button mat-raised-button (click)="startGame()" *ngIf="!isGameStarted && user.isHost">Start game</button>
+</div> -->
+<!--  <ng-container *ngFor="let user of usersList">
+  <div class="center" *ngIf="!isGameStarted && user.isHost">
+    <button mat-raised-button (click)="startGame()">Start game</button>
+  </div>
+</ng-container> -->
 
-      
-    <!-- <div class="players-list" >
+<!-- <div class="players-list" >
       <div *ngIf="!joined">
         <input type="text" [(ngModel)]="nickname" placeholder="Enter your nickname" />
         <input type="text" [(ngModel)]="room" placeholder="Enter the room name" />
@@ -77,7 +83,7 @@
     </div> -->
 
 
-  <!-- <div id="users" class=" players-list">
+<!-- <div id="users" class=" players-list">
     lalala
   </div>
 
@@ -135,4 +141,3 @@
     Next game
   </button>
 </div> -->
-

@@ -1,18 +1,17 @@
-.box {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  }
-
-.element{
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  width: 20rem;
-  margin: 7%;
+.main img {
+  margin-top: 75px;
 }
-  
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+
+.flex:first-child {
+  margin: 45px auto;
+}
+
+.red {
+  color: #ff006e;
+}

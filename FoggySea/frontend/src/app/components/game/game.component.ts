@@ -18,9 +18,11 @@ export class GameComponent implements OnInit {
     usersList = [];
     tile;
     isGameStarted: boolean = false;
+    hostUser: any = {}; // 
     isHostUser: boolean = false;
     clickedTile;
     currentUser;
+    pageUser
 
   constructor(
     private socketIoService: SocketioService,
@@ -57,7 +59,7 @@ export class GameComponent implements OnInit {
    this.currentUser = this.usersList.find((user) => user.currentTurn);
   
     if (!this.currentUser || this.currentUser.nickname !== this.nickname) {
-      this.snackbar.open('It is not your turn to click the tile.', 'Close', {
+      this.snackbar.open('Šobrīd nav Jūsu kārta beikt gājienu', 'Aizvērt', {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
@@ -72,15 +74,17 @@ export class GameComponent implements OnInit {
   recieveJoinedPlayers() {
     this.socketIoService.recieveJoinedPlayers().subscribe((usersList) => {
       this.usersList = usersList;
-     
-      this.isHostUser = usersList.find((user) => user.isHost)?.nickname === this.nickname;
+      this.pageUser = usersList.find((user) => user.nickname == this.nickname);
+
+      this.hostUser = usersList.find((user) => user.isHost == true);
+      //this.isHostUser = usersList.find((user) => user.isHost)?.nickname === this.nickname;
       this.sharedDataService.setUsersListCount(this.usersList.length); 
     });
   }
 
   startGame() {
     if (this.sharedDataService.getUsersListCount() < 2) {
-      this.snackbar.open('Need at least 2 players to start the game', 'Close', {
+      this.snackbar.open('Lai uzsāktu spēli jābūt vismaz diviem dalībniekiem', 'Aizvērt', {
         duration: 5000, // Duration in milliseconds
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
@@ -105,5 +109,14 @@ recieveGameUpdate() {
     this.usersList = data.usersList;
     this.currentUser = data.currentUser;
   });
+}
+
+leaveRoom(user)
+{
+  console.log(user);
+   // Emit the "leave" event to the server
+   this.socketIoService.leaveRoom(this.usersList, user, this.gameId);
+   this.recieveJoinedPlayers();
+   this.router.navigate(['']);
 }
 }
