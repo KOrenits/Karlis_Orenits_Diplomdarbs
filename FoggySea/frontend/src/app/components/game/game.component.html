@@ -1,7 +1,7 @@
 <div class="container">
 	<div class="header">
 		<img src="../../../assets/logo.png" alt="Logo">
-	
+		<button mat-raised-button color="accent" (click)="openRules()">Noteikumi</button>
 	</div>
   <ng-container *ngIf="!isGameStarted && pageUser?.isHost">
       <button mat-raised-button (click)="startGame()">Start game</button>

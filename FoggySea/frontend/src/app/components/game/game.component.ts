@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SocketioService } from 'src/app/services/socketio.service';
 import { SharedDataService } from 'src/app/services/shared-data.service';
 import { MaterialModule } from 'src/app/material/material.module';
+import { MatDialog } from '@angular/material/dialog';
+import { GameRulesDialogComponent } from '../game-rules-dialog/game-rules-dialog.component';
 
 @Component({
   selector: 'app-game',
@@ -31,6 +33,7 @@ export class GameComponent implements OnInit {
     private router: Router,
     private sharedDataService: SharedDataService,
     private materialModule: MaterialModule,
+    private matDialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -119,4 +122,11 @@ leaveRoom(user)
    this.recieveJoinedPlayers();
    this.router.navigate(['']);
 }
+
+  openRules() {
+    this.matDialog.open(GameRulesDialogComponent, {
+      width: '400px', // Set the width of the dialog
+      // Add any other configuration options as needed
+    });
+  }
 }

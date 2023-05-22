@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { SharedDataService } from 'src/app/services/shared-data.service';
 import { SocketioService } from 'src/app/services/socketio.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { GameRulesDialogComponent } from '../game-rules-dialog/game-rules-dialog.component';
 
 @Component({
   selector: 'app-lobby',
@@ -16,7 +18,8 @@ export class LobbyComponent implements OnInit {
     private router: Router,
     private sharedDataService: SharedDataService,
     private socketIoService: SocketioService,
-    private matsnackBar: MatSnackBar
+    private matsnackBar: MatSnackBar,
+    private matDialog: MatDialog
   ) {}
 
   ngOnInit(): void {}
@@ -87,5 +90,12 @@ export class LobbyComponent implements OnInit {
   
     // Navigate to the game component with the game ID as a parameter
     this.router.navigate(['/game', gameId]);
+  }
+
+  openRules() {
+    this.matDialog.open(GameRulesDialogComponent, {
+      width: '400px', // Set the width of the dialog
+      // Add any other configuration options as needed
+    });
   }
 }

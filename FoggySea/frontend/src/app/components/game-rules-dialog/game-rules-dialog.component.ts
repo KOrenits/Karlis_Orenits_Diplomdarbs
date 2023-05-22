@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-game-rules-dialog',
@@ -6,5 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./game-rules-dialog.component.css']
 })
 export class GameRulesDialogComponent {
+  constructor(
+    public dialogRef: MatDialogRef<GameRulesDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
+  closeDialog(): void {
+    this.dialogRef.close();
+  }
 }
