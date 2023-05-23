@@ -1,0 +1,36 @@
+h1 {
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+}
+
+h3 {
+  color: #000;
+  font-weight: bold;
+}
+
+p {
+  color: #000;
+}
+
+ul {
+  margin-left: 20px;
+}
+
+ul li {
+  color: #000;
+}
+
+ul li:last-child {
+  margin-bottom: 25px;
+}
+
+.high {
+  margin-left: 8px;
+  margin-bottom: 8px;
+}
+
+.flex-ul {
+  display: flex;
+  align-items: center;
+}

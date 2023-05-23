@@ -1,11 +1,23 @@
 .main img {
-  margin-top: 75px;
+  margin-top: 50px;
+}
+
+.main h2 {
+  color: #023e8a;
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+}
+
+.main h2:first-child {
+  margin-top: 29px;
 }
 
 .flex {
   display: flex;
   flex-direction: column;
   width: 400px;
+  margin-top: 50px;
 }
 
 .flex:first-child {

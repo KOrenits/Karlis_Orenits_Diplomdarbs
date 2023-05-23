@@ -3,6 +3,14 @@
   justify-content: center;
 }
 
+.button {
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  top: 40px;
+  right: 100px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -33,7 +41,7 @@
 .box p {
   font-size: 24px;
   font-weight: bold;
-  margin-top: 8px;
+  margin-top: 15px;
 }
 
 .players-list {
@@ -60,6 +68,11 @@
   text-align: center;
   border-bottom: 1px solid #000;
   margin: 0;
+}
+
+.players-list button {
+  margin-top: 188px;
+  margin-left: 30px;
 }
 
 .defaultTile {

@@ -11,8 +11,4 @@ export class GameRulesDialogComponent {
     public dialogRef: MatDialogRef<GameRulesDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
-
-  closeDialog(): void {
-    this.dialogRef.close();
-  }
 }

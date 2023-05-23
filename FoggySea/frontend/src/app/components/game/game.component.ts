@@ -57,14 +57,12 @@ export class GameComponent implements OnInit {
         this.recieveJoinedPlayers();
         this.recieveStartGame();
         this.recieveGameUpdate();
-        //this.onGameEnd();
-        
   }
 
   
   clickTile(tile) {
    this.currentUser = this.usersList.find((user) => user.currentTurn);
-    
+  
     if (!this.currentUser || this.currentUser.nickname !== this.nickname) {
       this.snackbar.open('Šobrīd nav Jūsu kārta veikt gājienu', 'Aizvērt', {
         duration: 3000,
@@ -73,20 +71,18 @@ export class GameComponent implements OnInit {
       });
       return;
     }
+  
     // Only the current user can send the game update
     this.socketIoService.gameUpdate(this.gameId, this.tilesList, tile, this.usersList, this.currentUser, this.isGameOver);
+  }
 
-    console.log(this.isGameOver)
-}
-
-openGameEndDialog(usersList): void {
-  this.usersList = usersList;
-  this.matDialog.open(GameEndDialogComponent, {
-    width: '400px',
-    data: { usersList: this.usersList }
-  });
-}
-
+  openGameEndDialog(usersList): void {
+    this.usersList = usersList;
+    this.matDialog.open(GameEndDialogComponent, {
+      width: '400px',
+      data: { usersList: this.usersList }
+    });
+  }
 
   recieveJoinedPlayers() {
     this.socketIoService.recieveJoinedPlayers().subscribe((usersList) => {
@@ -94,6 +90,7 @@ openGameEndDialog(usersList): void {
       this.pageUser = usersList.find((user) => user.nickname == this.nickname);
 
       this.hostUser = usersList.find((user) => user.isHost == true);
+      //this.isHostUser = usersList.find((user) => user.isHost)?.nickname === this.nickname;
       this.sharedDataService.setUsersListCount(this.usersList.length); 
     });
   }
@@ -107,21 +104,22 @@ openGameEndDialog(usersList): void {
       });
       return;
     }
-    this.isGameOver = false
+    this.isGameOver = false;
     this.isGameStarted = true;
     this.socketIoService.startGame(this.gameId, this.isGameStarted);
     this.currentUser = this.usersList.find(user => user.playerId == 0);
   }
 
   recieveStartGame() {
-  this.socketIoService.recieveStartGame().subscribe((data: { tilesList: any, isGameStarted: any}) => {
+    this.socketIoService.recieveStartGame().subscribe((data: { tilesList: any, isGameStarted: any}) => {
     this.tilesList = data.tilesList;
     this.isGameStarted = data.isGameStarted;
+    
   });
 }
 
 recieveGameUpdate() {
-  this.socketIoService.recieveGameUpdate(this.gameId).subscribe((data: { tilesList: any, usersList: any, currentUser: any, isGameOver: any }) => {
+  this.socketIoService.recieveGameUpdate(this.gameId).subscribe((data: { tilesList: any, usersList: any, currentUser: any, isGameOver: any }) => {    this.tilesList = data.tilesList;
     this.tilesList = data.tilesList;
     this.usersList = data.usersList;
     this.currentUser = data.currentUser;
@@ -147,7 +145,7 @@ leaveRoom(user)
 
   openRules() {
     this.matDialog.open(GameRulesDialogComponent, {
-      width: '400px', // Set the width of the dialog
+      width: '1000px', // Set the width of the dialog
       // Add any other configuration options as needed
     });
   }

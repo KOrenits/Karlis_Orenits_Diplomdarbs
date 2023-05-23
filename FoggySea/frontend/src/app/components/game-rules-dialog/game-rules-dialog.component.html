@@ -1,3 +1,57 @@
-<h1>Game Rules</h1>
-<p>Put your game rules here.</p>
-<button mat-button (click)="closeDialog()">Close</button>
+<h1 mat-dialog-title>Spēles noteikumi</h1>
+<hr>
+<mat-dialog-content class="mat-typography">
+    <p>Spēle “Miglainā jūra” ir paredzēta 2-6 spēlētājiem jebkurā vecuma grupā. Galvenais mērķis ir līdz spēles beigām
+        sakrāt pēc iespējas vairāk punktu. Punktus iegūst gremdējot kuģus.</p>
+    <h3>Spēles gaita</h3>
+    <p>Spēlētāji pēc kārtas šauj pa laukumu atklājot rūtiņas. Ir dažādi lauciņu veidi un katram ir savas īpašības.</p>
+    <h3>Lauciņu veidi</h3>
+    <ul>
+        <li>Tukšais lauks<br>
+            <div class="flex-ul">
+                <img src="../../../assets/empty.png" alt="Empty tile" width="50">
+                <span class="high"> - <i>spēlētāja gājiens beidzas</i>.</span>
+            </div>
+        </li>
+        <li>Zelta kuģis<br>
+            <div class="flex-ul">
+                <img src="../../../assets/golden_ship.png" alt="Golden ship" width="50">
+                <span class="high"> - <i>spēlētājs
+                        iegūst divus punktus un drīkst šaut vēlreiz</i>.</span>
+            </div>
+        </li>
+        <li>Kuģis<br>
+            <div class="flex-ul">
+                <img src="../../../assets/regular_ship.png" alt="Regular ship" width="50">
+                <span class="high"> - <i>spēlētājs
+                        iegūst punktu un drīkst šaut vēlreiz</i>.</span>
+            </div>
+        </li>
+        <li>Pirāts<br>
+            <div class="flex-ul">
+                <img src="../../../assets/pirate.png" alt="Pirate" width="50">
+                <span class="high"> - <i>spēlētājam tiek atņemts punkts, gājiens beidzas</i>.</span>
+            </div>
+        </li>
+        <li>Nāriņa<br>
+            <div class="flex-ul">
+                <img src="../../../assets/mermaid.png" alt="Mermaid" width="50">
+                <span class="high"> - <i>spēlētājs iegūst papildus divus gājienus</i>.</span>
+            </div>
+        </li>
+        <li>Astoņkājis<br>
+            <div class="flex-ul">
+                <img src="../../../assets/kraken.png" alt="Kraken" width="50">
+                <span class="high"> - <i>spēlētāja gājiens beidzas, tiek izlaists nākošais gājiens</i>.</span>
+            </div>
+        </li>
+    </ul>
+    <h3>Ņem vērā</h3>
+    <p>Kuģi savā starpā nesaskaras. Ja tiek nogremdēts kuģis tad tam apkārt esošie robežlauciņi tiek atklāti. Taču to
+        īpašības netiek izmantotas uz konkrēto spēlētāju.</p>
+    <h3>Spēles beigas</h3>
+    <p>Spēle beidzas, kad pēdējais kuģa lauciņš tiek nogremdēts. Uzvar spēlētājs, kuram ir visvairāk punktu.</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close color="warn">Aizvērt</button>
+</mat-dialog-actions>

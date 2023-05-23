@@ -3,9 +3,9 @@
 		<img src="../../../assets/logo.png" alt="Logo">
 		<button mat-raised-button color="accent" (click)="openRules()">Noteikumi</button>
 	</div>
-  <ng-container *ngIf="!isGameStarted && pageUser?.isHost">
-      <button mat-raised-button (click)="startGame()">Start game</button>
-  </ng-container>
+	<ng-container *ngIf="!isGameStarted && pageUser?.isHost">
+		<button class="button" mat-raised-button color="primary" (click)="startGame()">Sākt spēli</button>
+	</ng-container>
 	<div class="main-container" *ngIf="isGameStarted">
 		<div class="grid">
 			<ng-container *ngFor="let tiles of tilesList">
@@ -28,7 +28,7 @@
 			<ul>
 				<li *ngFor="let user of usersList">
 					<span *ngIf="user.currentTurn" class="checkmark">&#10004;&nbsp;</span>
-          <span *ngIf="pageUser" class="checkmark">&#10004;&nbsp;</span>
+					<span *ngIf="pageUser" class="checkmark">&#10004;&nbsp;</span>
 					<span [ngClass]="{
 									'nicknameTurn': user.currentTurn,
 									'nicknameNoTurn': !user.currentTurn
@@ -41,7 +41,7 @@
 	</div>
 	<div class="main-container" *ngIf="!isGameStarted">
 		<div class="box">
-      <p *ngIf="pageUser?.isHost">Spēlētāji gaida, kad uzsāksiet spēli</p>
+			<p *ngIf="pageUser?.isHost">Spēlētāji gaida, kad uzsāksiet spēli</p>
 			<p *ngIf="!pageUser?.isHost">Gaida kamēr {{hostUser?.nickname}} uzsāks spēli</p>
 			<span class="loader"></span>
 		</div>
@@ -49,12 +49,12 @@
 			<h4>Pieslēgušies spēlētāji</h4>
 			<ul>
 				<li *ngFor="let user of usersList">
-          <span *ngIf="pageUser" class="checkmark">&#10004;&nbsp;</span>
+					<span *ngIf="pageUser" class="checkmark">&#10004;&nbsp;</span>
 					{{ user.nickname }} - Punkti: {{ user.points }}
 				</li>
 			</ul>
+			<button mat-raised-button color="warn" (click)="leaveRoom(pageUser)">Pamest istabu</button>
 		</div>
-      <button mat-raised-button color="warn" (click)="leaveRoom(pageUser)">Leave</button>
 	</div>
 	<div class="footer">
 		<p>Foggy sea © 2023</p>
@@ -93,9 +93,6 @@
     Next game
   </button> -->
 
-
-
-
 <!-- <div (click)="tilePressed(tile)" class="grid-computer" [ngClass]="{'defaultTile': !tile.selected,
 'shipTile': (tile.selected == true) && (tile.tileType == tileTypes.ship)}"></div> -->
 
@@ -114,7 +111,6 @@
   </div>
 </ng-container>
 </ng-container> -->
-
 
 <!-- <div class="game">
   <div class="center" *ngIf="!words">

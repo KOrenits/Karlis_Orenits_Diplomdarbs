@@ -94,7 +94,7 @@ export class LobbyComponent implements OnInit {
 
   openRules() {
     this.matDialog.open(GameRulesDialogComponent, {
-      width: '400px', // Set the width of the dialog
+      width: '1000px', // Set the width of the dialog
       // Add any other configuration options as needed
     });
   }
