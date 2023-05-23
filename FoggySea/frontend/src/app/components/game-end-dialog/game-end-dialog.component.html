@@ -1,0 +1,9 @@
+<h1>End Game</h1>
+<ul>
+  <li *ngFor="let user of usersList">
+    <span *ngIf="user.points == highestPointsUser.points" class="checkmark">&#10004;&nbsp;</span>
+    <span *ngIf="user.points != highestPointsUser.points"></span>
+    {{ user.nickname }} -- {{ user.points }}
+  </li>
+</ul>
+<button mat-button (click)="closeDialog()">Close</button>

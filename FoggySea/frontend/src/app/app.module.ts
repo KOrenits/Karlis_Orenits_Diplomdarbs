@@ -8,6 +8,7 @@ import { MaterialModule } from './material/material.module';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { GameComponent } from './components/game/game.component';
 import { GameRulesDialogComponent } from './components/game-rules-dialog/game-rules-dialog.component';
+import { GameEndDialogComponent } from './components/game-end-dialog/game-end-dialog.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { GameRulesDialogComponent } from './components/game-rules-dialog/game-ru
     AppComponent,
     LobbyComponent,
     GameComponent,
-    GameRulesDialogComponent
+    GameRulesDialogComponent,
+    GameEndDialogComponent
   ],
   imports: [
     BrowserModule,

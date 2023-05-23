@@ -51,7 +51,7 @@ export class LobbyComponent implements OnInit {
 
     if (!nickname) {
       // NickName is empty
-      this.matsnackBar.open('Please enter a nickname', 'Close', {
+      this.matsnackBar.open('Lūdzu ievadiet segvārdu', 'Aizvērt', {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
@@ -62,7 +62,7 @@ export class LobbyComponent implements OnInit {
 
     if (!gameId) {
       // Game ID is empty
-      this.matsnackBar.open('Please enter a game ID', 'Close', {
+      this.matsnackBar.open('Lūdzu ievadiet spēles ID', 'Aizvērt', {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
@@ -73,7 +73,7 @@ export class LobbyComponent implements OnInit {
   var usersCount = this.sharedDataService.getUsersListCount();
   if (usersCount > 5) {
     // Maximum user count reached
-    this.matsnackBar.open('Cannot join the room, maximum users reached', 'Close', {
+    this.matsnackBar.open('Nevar pievienoties istabai, jo ir sasniegts maksimālais spelētāju skaits', 'Aizvērt', {
       duration: 3000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',

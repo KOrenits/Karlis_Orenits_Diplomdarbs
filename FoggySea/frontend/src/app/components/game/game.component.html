@@ -28,6 +28,7 @@
 			<ul>
 				<li *ngFor="let user of usersList">
 					<span *ngIf="user.currentTurn" class="checkmark">&#10004;&nbsp;</span>
+          <span *ngIf="pageUser" class="checkmark">&#10004;&nbsp;</span>
 					<span [ngClass]="{
 									'nicknameTurn': user.currentTurn,
 									'nicknameNoTurn': !user.currentTurn
@@ -48,6 +49,7 @@
 			<h4>Pieslēgušies spēlētāji</h4>
 			<ul>
 				<li *ngFor="let user of usersList">
+          <span *ngIf="pageUser" class="checkmark">&#10004;&nbsp;</span>
 					{{ user.nickname }} - Punkti: {{ user.points }}
 				</li>
 			</ul>

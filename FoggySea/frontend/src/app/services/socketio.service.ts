@@ -19,9 +19,15 @@ export class SocketioService {
   }
 
 
-
-  sendGameUpdate(gameId, tilesList, clickedTile, usersList, currentUser) {
-    this.socket.emit('gameUpdate', { gameId: gameId, tilesList: tilesList, clickedTile: clickedTile, usersList: usersList, currentUser: currentUser });
+  gameUpdate(gameId, tilesList, clickedTile, usersList, currentUser, isGameOver) {
+    this.socket.emit('gameUpdate', { 
+      gameId: gameId, 
+      tilesList: tilesList, 
+      clickedTile: clickedTile, 
+      usersList: usersList, 
+      currentUser: currentUser,
+      isGameOver: isGameOver 
+    });
   }
 
   recieveJoinedPlayers(): Observable<any> {
@@ -46,8 +52,8 @@ recieveStartGame() {
 
 recieveGameUpdate(gameId) {
   return new Observable((observer) => {
-    this.socket.on(gameId, ({ tilesList, usersList, currentUser }) => {
-      observer.next({ tilesList, usersList, currentUser });
+    this.socket.on(gameId, ({ tilesList, usersList, currentUser, isGameOver }) => {
+      observer.next({ tilesList, usersList, currentUser, isGameOver });
     });
   });
 }

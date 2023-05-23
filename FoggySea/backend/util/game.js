@@ -42,6 +42,7 @@ var tilesList = []
 var tempTileList = []
 var tempShip = []
 var earnedPoints;
+var tempIsGameOver = false;
 
 function createGame() {
     return new Promise(function (resolve,reject){
@@ -121,9 +122,14 @@ function controlIfShipDestroyed(tilesList, clickedTile){
             shipsCount = shipsCount - 1;
         }
     } 
-                
+
     if (shipsCount == 0)
+    {
+        tempIsGameOver = true;   
         fillRestOfRemainingTiles();
+        
+    }
+        
 }
 
 
@@ -363,9 +369,10 @@ function  createGoldenShips()
         }
     }
 
-    function updateGame(tilesList, clickedTile, usersList, currentUser) {
+    function updateGame(tilesList, clickedTile, usersList, currentUser, isGameOver) {
         return new Promise(function (resolve,reject){
         this.tilesList = tilesList;
+        tempIsGameOver =  isGameOver;
         controlIfShipDestroyed(tilesList, clickedTile);
     
         if (earnedPoints > 0) 
@@ -413,9 +420,7 @@ function  createGoldenShips()
             usersList = newUpdatedUsers;
             currentUser = nextUser;
         }
-    
-    
-        resolve({ tilesList: tilesList, usersList: usersList, currentUser: currentUser });
+        resolve({ tilesList: tilesList, usersList: usersList, currentUser: currentUser, isGameOver: tempIsGameOver });
         });
     }
 
@@ -426,6 +431,7 @@ function  createGoldenShips()
             if(usersList[i].playerId == 0)
             {
                 usersList[i].isHost = true;
+                usersList[i].currentTurn = true;
             }
         }
         return usersList;

@@ -19,18 +19,11 @@ io.on("connection", (socket) => {
         })
     });
 
-    socket.on('gameUpdate', ({ gameId, tilesList, clickedTile, usersList, currentUser }) => {
-        console.log(usersList);
-        updateGame(tilesList, clickedTile, usersList, currentUser).then(({ tilesList, usersList, currentUser }) => {
-          console.log(currentUser);
-          console.log(usersList);
-          io.to(gameId).emit(gameId, { tilesList, usersList, currentUser });
+    socket.on('gameUpdate', ({ gameId, tilesList, clickedTile, usersList, currentUser, isGameOver }) => {
+        updateGame(tilesList, clickedTile, usersList, currentUser, isGameOver).then(({ tilesList, usersList, currentUser, isGameOver }) => {
+          io.to(gameId).emit(gameId, { tilesList, usersList, currentUser, isGameOver });
         });
       });
-
-    /* socket.on('gameUpdate', ({ gameId }) => {
-        io.to(gameId).emit(gameId, );
-    }) */
     
     socket.on('joinRoom', ({ nickname, gameId }) => {
         socket.join(gameId);
@@ -44,7 +37,10 @@ io.on("connection", (socket) => {
         }
         io.to(gameId).emit('users', users[gameId]);
         console.log(`User ${nickname} joined room ${gameId}`);
-        
+    });
+
+    socket.on('gameEnd', ({ gameId }) => {
+      io.to(gameId).emit('gameEnd', users[gameId]);
     });
 
     socket.on('disconnect', () => {
