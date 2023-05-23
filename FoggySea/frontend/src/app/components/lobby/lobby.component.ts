@@ -49,6 +49,19 @@ export class LobbyComponent implements OnInit {
   
     const gameId = gameLinkInput.value.trim().split('/').pop();
 
+    const usersCount = this.sharedDataService.getUsersListCount();
+    const usersList = this.sharedDataService.getUsersList();
+    for (let i = 0; i < usersCount; i++) {
+      if (usersList[i].nickname == nickname) {
+        this.matsnackBar.open('Šajā istabā jau ir lietotājs ar šadu segvārdu', 'Aizvērt', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+        return;
+      }
+    }
+    
     if (!nickname) {
       // NickName is empty
       this.matsnackBar.open('Lūdzu ievadiet segvārdu', 'Aizvērt', {
@@ -70,7 +83,6 @@ export class LobbyComponent implements OnInit {
       return;
     }
 
-  var usersCount = this.sharedDataService.getUsersListCount();
   if (usersCount > 5) {
     // Maximum user count reached
     this.matsnackBar.open('Nevar pievienoties istabai, jo ir sasniegts maksimālais spelētāju skaits', 'Aizvērt', {

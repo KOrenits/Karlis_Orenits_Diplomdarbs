@@ -50,9 +50,9 @@ recieveStartGame() {
   });
 }
 
-recieveGameUpdate(gameId) {
+recieveGameUpdate() {
   return new Observable((observer) => {
-    this.socket.on(gameId, ({ tilesList, usersList, currentUser, isGameOver }) => {
+    this.socket.on('gameUpdate', ({ tilesList, usersList, currentUser, isGameOver }) => {
       observer.next({ tilesList, usersList, currentUser, isGameOver });
     });
   });

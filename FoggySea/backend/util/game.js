@@ -33,7 +33,6 @@ const gameSettings = {
     pirates: 6
 }
 
-var shipsCount = gameSettings.shipTypes.length;
 
 var shipsList = []
 var tilesList = []
@@ -42,15 +41,15 @@ var tilesList = []
 var tempTileList = []
 var tempShip = []
 var earnedPoints;
-var tempIsGameOver = false;
+var tempCurrentShipsCount;
 
 function createGame() {
     return new Promise(function (resolve,reject){
         shipsList = [];
         tempTileList = [];
         tempShip = [];
-        tilesList = [];
-
+        this.tilesList = [];
+            console.log("6");
         for (var y = 0; y < gameSettings.rows; y++)
         {
             var columns = [];
@@ -67,7 +66,7 @@ function createGame() {
             }
             columns.push(object)
             }
-            tilesList.push(columns)
+            this.tilesList.push(columns)
         }
         
         createShips();
@@ -75,14 +74,14 @@ function createGame() {
         createKrakens();
         createMermaids();
         createPirates(); 
-        resolve(tilesList);
+        resolve({tilesList: this.tilesList, currentShipsCount: gameSettings.shipTypes.length});
     });
 }
 
-function controlIfShipDestroyed(tilesList, clickedTile){
+function controlIfShipDestroyed(clickedTile){
     var currentShip = [];
     var currentTile = [];
-    tilesList.forEach(ship =>{
+    this.tilesList.forEach(ship =>{
         ship.forEach(tile =>{
             if(tile.shipId == clickedTile.shipId)
             {
@@ -119,15 +118,15 @@ function controlIfShipDestroyed(tilesList, clickedTile){
         if (shipIsDestroyed)
         {
             findNecessaryShipBorderOrExpansionTiles(currentShip, 2);
-            shipsCount = shipsCount - 1;
+            tempCurrentShipsCount = tempCurrentShipsCount - 1;
         }
     } 
 
-    if (shipsCount == 0)
+    if (tempCurrentShipsCount == 0)
     {
+        console.log("5")
         tempIsGameOver = true;   
         fillRestOfRemainingTiles();
-        
     }
         
 }
@@ -158,11 +157,11 @@ function createShips(){
             var y = getRandomInt(gameSettings.columns);
             tempTileList = [];
             tempShip = [];
-            if(tilesList[y][x].canPutShip == true)
+            if(this.tilesList[y][x].canPutShip == true)
             {
-                tilesList[y][x].tileType = tileTypes.ship;
-                tilesList[y][x].canPutShip = false;
-                tempShip.push(tilesList[y][x]);
+                this.tilesList[y][x].tileType = tileTypes.ship;
+                this.tilesList[y][x].canPutShip = false;
+                tempShip.push(this.tilesList[y][x]);
                 if(gameSettings.shipTypes[i] == 1)
                 {
                     makeThisShipAgain = false;
@@ -232,19 +231,19 @@ function findNecessaryShipBorderOrExpansionTiles(tempShip, methodType) {
             if (methodType == 0 && (shipTile.x == xMin || shipTile.y == yMin))
             {
                 //Find Ship Tiles for ship extension
-                if (tilesList[yMin][xMin].tileType == tileTypes.default && tilesList[yMin][xMin].canPutShip && tilesList[yMin][xMin].isPossibleShipTile)
+                if (this.tilesList[yMin][xMin].tileType == tileTypes.default && this.tilesList[yMin][xMin].canPutShip && this.tilesList[yMin][xMin].isPossibleShipTile)
                 {
-                tilesList[yMin][xMin].isPossibleShipTile = false;
-                tempTileList.push(tilesList[yMin][xMin]);
+                this.tilesList[yMin][xMin].isPossibleShipTile = false;
+                tempTileList.push(this.tilesList[yMin][xMin]);
                 }
             }
             else
             {
                 //Find Ship Border Tiles
-                if (tilesList[yMin][xMin].tileType != tileTypes.ship)
+                if (this.tilesList[yMin][xMin].tileType != tileTypes.ship)
                 {
                     if (methodType == 1)
-                        tilesList[yMin][xMin].canPutShip = false;
+                        this.tilesList[yMin][xMin].canPutShip = false;
                     else if (methodType == 2)
                     {
                         this.tilesList[yMin][xMin].selected = true;
@@ -296,8 +295,8 @@ function  createSpecialTiles(validationTileType, tileType, count){
     {
         for (var x = 0; x < gameSettings.columns; ++x)
         {
-        if (tilesList[y][x].tileType == validationTileType)
-            tempTileList.push(tilesList[y][x]);
+        if (this.tilesList[y][x].tileType == validationTileType)
+            tempTileList.push(this.tilesList[y][x]);
         }
     }
     for (var i = 0; i < count; i++)
@@ -339,10 +338,8 @@ function  createGoldenShips()
         {
             isHost = false;
             isCurrentTurn = false;
-            console.log("2");
             usersList.forEach(user =>
             {
-                console.log("1");
                 if(user.nickname == nickname)
                 {
                     addAnotherUser = false;
@@ -369,18 +366,16 @@ function  createGoldenShips()
         }
     }
 
-    function updateGame(tilesList, clickedTile, usersList, currentUser, isGameOver) {
+    function updateGame(tilesList, clickedTile, usersList, currentUser, isGameOver, currentShipsCount) {
         return new Promise(function (resolve,reject){
         this.tilesList = tilesList;
         tempIsGameOver =  isGameOver;
-        controlIfShipDestroyed(tilesList, clickedTile);
+        tempCurrentShipsCount = currentShipsCount;
+        controlIfShipDestroyed(clickedTile);
     
         if (earnedPoints > 0) 
         {
-            //console.log(earnedPoints);
             currentUser.points = currentUser.points + earnedPoints;
-            //console.log(currentUser);
-            //console.log(usersList);
             const updatedUsers =  usersList.map((user) => {
                 if (user.playerId == currentUser.playerId) {
                     return { ...currentUser };
@@ -419,8 +414,10 @@ function  createGoldenShips()
             });
             usersList = newUpdatedUsers;
             currentUser = nextUser;
+            
         }
-        resolve({ tilesList: tilesList, usersList: usersList, currentUser: currentUser, isGameOver: tempIsGameOver });
+        //rentShipsCount = tempCurrentShipsCount;
+        resolve({ tilesList: this.tilesList, usersList: usersList, currentUser: currentUser, isGameOver: tempIsGameOver, currentShipsCount: tempCurrentShipsCount});
         });
     }
 
@@ -443,98 +440,6 @@ function  createGoldenShips()
         addUser,
         createNewHost
     };
-
-
-    /* function  controlIfShipDestroyed(createdTilesList, clickedTile){
-        var index = 0;
-        createdTilesList.forEach(ship =>{
-        ship.forEach(tiles =>{
-            if (tiles == clickedTile)
-            {
-            var shipIsDestroyed = true;
-            tempShip = ship;
-            tempShip.forEach(tile =>{
-                if (!tile.selected )
-                {
-                    shipIsDestroyed = false;
-                }
-            });
-            if (shipIsDestroyed)
-            {
-                findNecessaryShipBorderOrExpansionTiles(tempShip, 2);
-                shipsList.splice(index, 1);
-            }
-            }
-        });
-        index++;
-        });
-        if (shipsList.length == 0)
-            fillRestOfRemainingTiles();
-    } */
-
-
-// function createGame() {
-//     return new Promise(function (resolve, reject) {
-//        var cardIndex = [] 
-//         var cards = []
-//         var cardsfinal = [];
-//         var singleIndex;
-//         for (var i = 0; i < 100; i++) {
-
-//             singleIndex = getRandomInt(tileTypes.length);
-//             cardIndex.push(i)
-//             cards.push(
-//                 {
-//                     word: " ",
-//                     color: "blue",
-//                     tileType: tileTypes[1],
-//                     selected: false
-//                 })
-//         }
-
-//         for (var red = 0; red < 25; red++) {
-//             var singleIndex = getRandomInt(cards.length)
-
-//             cards[singleIndex].color = "red";
-//             cards[singleIndex].tileType = tileTypes[0];
-//             cardsfinal.push(cards[singleIndex]);
-//             cards.splice(singleIndex, 1);
-//         }
-
-//         var final = cards.concat(cardsfinal);
-//         final = shuffle(final);
-
-//         resolve(final);
-//     });
-// }
-
-
-// function shuffle(array) {
-//     var currentIndex = array.length, temporaryValue, randomIndex;
-
-//     // While there remain elements to shuffle...
-//     while (0 !== currentIndex) {
-
-//         // Pick a remaining element...
-//         randomIndex = Math.floor(Math.random() * currentIndex);
-//         currentIndex -= 1;
-
-//         // And swap it with the current element.
-//         temporaryValue = array[currentIndex];
-//         array[currentIndex] = array[randomIndex];
-//         array[randomIndex] = temporaryValue;
-//     }
-
-//     return array;
-// }
-
-// function getRandomInt(max) {
-//     return Math.floor(Math.random() * Math.floor(max));
-// }
-
-// module.exports = {
-//     createGame
-// };
 
 
 

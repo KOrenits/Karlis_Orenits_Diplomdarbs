@@ -5,6 +5,7 @@ const io = require('socket.io')(httpServer, {
     origins: ["*"]
 });
 var users = {};
+var shipsCount = {};
 const { createGame } = require('./util/game.js');
 const { updateGame } = require('./util/game.js');
 const { addUser } = require('./util/game.js');
@@ -14,15 +15,27 @@ io.on("connection", (socket) => {
     console.log("a user connected");
 
     socket.on('startGame', ({ gameId, isGameStarted }) => {
-        createGame().then(tilesList => {
-            io.to(gameId).emit('startGame', {tilesList, isGameStarted });
-        })
+      createGame().then(({tilesList,currentShipsCount}) => {
+        if (!shipsCount[gameId]) {
+          shipsCount[gameId] = []; // Initialize as an empty array if it doesn't exist
+        }
+        console.log(currentShipsCount);
+        shipsCount[gameId].push(currentShipsCount);
+        io.to(gameId).emit('startGame', {tilesList, isGameStarted });
+      });    
     });
 
     socket.on('gameUpdate', ({ gameId, tilesList, clickedTile, usersList, currentUser, isGameOver }) => {
-        updateGame(tilesList, clickedTile, usersList, currentUser, isGameOver).then(({ tilesList, usersList, currentUser, isGameOver }) => {
-          io.to(gameId).emit(gameId, { tilesList, usersList, currentUser, isGameOver });
+      currentShipsCount = shipsCount[gameId];
+        updateGame(tilesList, clickedTile, usersList, currentUser, isGameOver, currentShipsCount).then(({ tilesList, usersList, currentUser, isGameOver, currentShipsCount }) => {
+          shipsCount[gameId] = currentShipsCount;
+          if (shipsCount[gameId] == 0) {
+            delete shipsCount[gameId];
+          }
+          console.log(shipsCount);
+          io.to(gameId).emit('gameUpdate', { tilesList, usersList, currentUser, isGameOver });
         });
+        
       });
     
     socket.on('joinRoom', ({ nickname, gameId }) => {
@@ -72,6 +85,9 @@ io.on("connection", (socket) => {
           users[gameId].splice(userIndex, 1);
           if(leavingUser.playerId == 0){
             createNewHost(users[gameId]);
+          }
+          if (users[gameId] == 0) {
+            delete users[gameId];
           }
           io.to(gameId).emit('users', users[gameId]);   
         }

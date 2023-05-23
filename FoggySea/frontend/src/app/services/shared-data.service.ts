@@ -11,12 +11,25 @@ export class SharedDataService {
   private GameId: string;
   private Nickname: string;
   private UsersListCount;
+  private UsersList: any[];
 
   constructor() {
     // Retrieve gameId and nickname from localStorage on initialization
     this.GameId = localStorage.getItem(this.GAME_ID_KEY);
     this.Nickname = localStorage.getItem(this.NICKNAME_KEY);
     this.UsersListCount = parseInt(localStorage.getItem(this.USERS_LIST_COUNT_KEY));
+    this.UsersList = JSON.parse(localStorage.getItem('usersList')) || [];
+
+  }
+
+  setUsersList(usersList: any[]) {
+    this.UsersList = usersList;
+    // Save usersList to localStorage
+    localStorage.setItem('usersList', JSON.stringify(usersList));
+  }
+
+  getUsersList() {
+    return this.UsersList;
   }
 
   getUsersListCount() {

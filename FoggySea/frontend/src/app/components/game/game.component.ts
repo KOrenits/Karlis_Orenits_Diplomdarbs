@@ -74,6 +74,7 @@ export class GameComponent implements OnInit {
   
     // Only the current user can send the game update
     this.socketIoService.gameUpdate(this.gameId, this.tilesList, tile, this.usersList, this.currentUser, this.isGameOver);
+    
   }
 
   openGameEndDialog(usersList): void {
@@ -88,15 +89,13 @@ export class GameComponent implements OnInit {
     this.socketIoService.recieveJoinedPlayers().subscribe((usersList) => {
       this.usersList = usersList;
       this.pageUser = usersList.find((user) => user.nickname == this.nickname);
-
       this.hostUser = usersList.find((user) => user.isHost == true);
-      //this.isHostUser = usersList.find((user) => user.isHost)?.nickname === this.nickname;
-      this.sharedDataService.setUsersListCount(this.usersList.length); 
+      this.sharedDataService.setUsersList(this.usersList);
     });
   }
 
   startGame() {
-    if (this.sharedDataService.getUsersListCount() < 2) {
+    if (this.usersList.length < 2) {
       this.snackbar.open('Lai uzsāktu spēli jābūt vismaz diviem dalībniekiem', 'Aizvērt', {
         duration: 3000, // Duration in milliseconds
         horizontalPosition: 'center',
@@ -104,7 +103,6 @@ export class GameComponent implements OnInit {
       });
       return;
     }
-    this.isGameOver = false;
     this.isGameStarted = true;
     this.socketIoService.startGame(this.gameId, this.isGameStarted);
     this.currentUser = this.usersList.find(user => user.playerId == 0);
@@ -114,23 +112,21 @@ export class GameComponent implements OnInit {
     this.socketIoService.recieveStartGame().subscribe((data: { tilesList: any, isGameStarted: any}) => {
     this.tilesList = data.tilesList;
     this.isGameStarted = data.isGameStarted;
-    
   });
 }
 
 recieveGameUpdate() {
-  this.socketIoService.recieveGameUpdate(this.gameId).subscribe((data: { tilesList: any, usersList: any, currentUser: any, isGameOver: any }) => {    this.tilesList = data.tilesList;
+  this.socketIoService.recieveGameUpdate().subscribe((data: { tilesList: any, usersList: any, currentUser: any, isGameOver: boolean }) => {    
     this.tilesList = data.tilesList;
     this.usersList = data.usersList;
     this.currentUser = data.currentUser;
     this.isGameOver = data.isGameOver;
-
     if(this.isGameOver)
     {
-      this.recieveJoinedPlayers();
+      //this.recieveJoinedPlayers();
       this.openGameEndDialog(this.usersList);
+      this.isGameOver = false;
     }
-
   });
 }
 
