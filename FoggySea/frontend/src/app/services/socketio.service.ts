@@ -9,31 +9,34 @@ import { ObserversModule } from '@angular/cdk/observers';
 })
 export class SocketioService {
   socket: Socket;
-  isGameStarted;
+  isGameStarted: boolean;
 
   constructor() {}
 
   connect(gameId, nickname) {
-    this.socket = io('http://localhost:3000')
+    const host = window.location.hostname;// Get the host IP dynamically
+    this.socket = io(`http://${host}:3000`);
     this.socket.emit('joinRoom', {nickname: nickname, gameId: gameId });
   }
 
 
-  gameUpdate(gameId, tilesList, clickedTile, usersList, currentUser, isGameOver) {
+  gameUpdate(gameId, tilesList, clickedTile, usersList, currentUser, isGameStarted) {
     this.socket.emit('gameUpdate', { 
       gameId: gameId, 
       tilesList: tilesList, 
       clickedTile: clickedTile, 
       usersList: usersList, 
       currentUser: currentUser,
-      isGameOver: isGameOver 
+      isGameStarted: isGameStarted
     });
   }
 
   recieveJoinedPlayers(): Observable<any> {
     return new Observable((observer) => {
       this.socket.on('users', (usersList) => {
-        observer.next(usersList);
+        if (usersList !== null) {
+          observer.next(usersList);
+        }
       });
     });
   }
@@ -53,7 +56,7 @@ recieveStartGame() {
 recieveGameUpdate() {
   return new Observable((observer) => {
     this.socket.on('gameUpdate', ({ tilesList, usersList, currentUser, isGameOver }) => {
-      observer.next({ tilesList, usersList, currentUser, isGameOver });
+      observer.next({ tilesList, usersList, currentUser,  isGameOver });
     });
   });
 }
@@ -66,4 +69,19 @@ recieveGameUpdate() {
   {
     this.socket.emit('leave', {usersList: usersList, leavingUser: leavingUser, gameId: gameId});
   }
+
+  recieveCurrentState(){
+    return new Observable((observer) => {
+      this.socket.on('currentState', ({ isGameStarted }) => {
+        if (isGameStarted != undefined) {
+          observer.next({ isGameStarted });
+        }
+      });
+    });
+  }
+  
+  currentStateUpdate(gameId) {
+    this.socket.emit('currentState', {gameId});
+  }
+
 }

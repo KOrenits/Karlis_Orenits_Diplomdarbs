@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocketioService } from 'src/app/services/socketio.service';
@@ -15,18 +15,18 @@ import { GameEndDialogComponent } from '../game-end-dialog/game-end-dialog.compo
 })
 
 export class GameComponent implements OnInit {
-    gameId;
-    nickname;
-    tilesList;
-    usersList = [];
-    tile;
-    isGameStarted: boolean = false;
-    hostUser: any = {}; // 
-    isHostUser: boolean = false;
-    clickedTile;
-    currentUser;
-    pageUser;
-    isGameOver: boolean = false;
+  gameId;
+  nickname;
+  tilesList;
+  usersList = [];
+  tile;
+  isGameStarted: boolean = false;
+  hostUser: any = {}; // 
+  isHostUser: boolean = false;
+  clickedTile;
+  currentUser;
+  pageUser;
+  isGameOver: boolean = false;
 
   constructor(
     private socketIoService: SocketioService,
@@ -49,19 +49,40 @@ export class GameComponent implements OnInit {
           this.recieveStartGame();
           this.recieveGameUpdate();
         });  */
-        this.gameId = this.sharedDataService.getGameId();
-        this.nickname = this.sharedDataService.getNickname(); 
+          this.gameId = this.sharedDataService.getGameId();
+          this.nickname = this.sharedDataService.getNickname();
+          
 
-        this.socketIoService.connect(this.gameId, this.nickname);
-        //this.socketIoService.requestUsers(this.gameId);
-        this.recieveJoinedPlayers();
-        this.recieveStartGame();
-        this.recieveGameUpdate();
+          this.socketIoService.connect(this.gameId, this.nickname);
+          //this.socketIoService.requestUsers(this.gameId);
+          this.recieveJoinedPlayers();
+          this.recieveStartGame();
+          //this.recieveGameUpdate();
+          //this.recieveCurrentState();
+          this.currentStateUpdate(this.gameId);
+          if(this.isGameStarted)
+          {
+            this.isGameStarted = this.isGameStarted;
+          } 
+        
+  
   }
+
+  @HostListener('window:popstate', ['$event'])
+handlePopState(event: Event) {
+  event.preventDefault();
+  this.leaveRoom(this.usersList.find(user => user.nickname === this.nickname));
+}
+
+@HostListener('window:unload', ['$event'])
+handleUnload(event: Event) {
+  // Save relevant data to restore the user's session when they return
+  this.leaveRoom(this.usersList.find(user => user.nickname === this.nickname));
+}
 
   
   clickTile(tile) {
-   this.currentUser = this.usersList.find((user) => user.currentTurn);
+    this.currentUser = this.usersList.find((user) => user.currentTurn);
   
     if (!this.currentUser || this.currentUser.nickname !== this.nickname) {
       this.snackbar.open('Šobrīd nav Jūsu kārta veikt gājienu', 'Aizvērt', {
@@ -71,13 +92,12 @@ export class GameComponent implements OnInit {
       });
       return;
     }
-  
+
     // Only the current user can send the game update
     this.socketIoService.gameUpdate(this.gameId, this.tilesList, tile, this.usersList, this.currentUser, this.isGameOver);
-    
   }
 
-  openGameEndDialog(usersList): void {
+  openGameEndDialog(usersList){
     this.usersList = usersList;
     this.matDialog.open(GameEndDialogComponent, {
       width: '400px',
@@ -87,36 +107,39 @@ export class GameComponent implements OnInit {
 
   recieveJoinedPlayers() {
     this.socketIoService.recieveJoinedPlayers().subscribe((usersList) => {
+      //this.currentStateUpdate(this.gameId);
       this.usersList = usersList;
       this.pageUser = usersList.find((user) => user.nickname == this.nickname);
       this.hostUser = usersList.find((user) => user.isHost == true);
+      //this.isHostUser = usersList.find((user) => user.isHost)?.nickname === this.nickname;
       this.sharedDataService.setUsersList(this.usersList);
     });
   }
+  
 
   startGame() {
-    if (this.usersList.length < 2) {
+  /*   if (this.usersList.length < 2) {
       this.snackbar.open('Lai uzsāktu spēli jābūt vismaz diviem dalībniekiem', 'Aizvērt', {
         duration: 3000, // Duration in milliseconds
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
       });
       return;
-    }
+    } */
     this.isGameStarted = true;
     this.socketIoService.startGame(this.gameId, this.isGameStarted);
     this.currentUser = this.usersList.find(user => user.playerId == 0);
   }
 
   recieveStartGame() {
-    this.socketIoService.recieveStartGame().subscribe((data: { tilesList: any, isGameStarted: any}) => {
+    this.socketIoService.recieveStartGame().subscribe((data: { tilesList: any, isGameStarted: boolean}) => {
     this.tilesList = data.tilesList;
     this.isGameStarted = data.isGameStarted;
   });
 }
 
 recieveGameUpdate() {
-  this.socketIoService.recieveGameUpdate().subscribe((data: { tilesList: any, usersList: any, currentUser: any, isGameOver: boolean }) => {    
+  this.socketIoService.recieveGameUpdate().subscribe((data: { tilesList: any, usersList: any, currentUser: any, isGameOver: boolean }) => {      
     this.tilesList = data.tilesList;
     this.usersList = data.usersList;
     this.currentUser = data.currentUser;
@@ -135,7 +158,7 @@ leaveRoom(user)
   console.log(user);
    // Emit the "leave" event to the server
    this.socketIoService.leaveRoom(this.usersList, user, this.gameId);
-   this.recieveJoinedPlayers();
+   //this.recieveJoinedPlayers();
    this.router.navigate(['']);
 }
 
@@ -144,5 +167,15 @@ leaveRoom(user)
       width: '1000px', // Set the width of the dialog
       // Add any other configuration options as needed
     });
+  }
+
+  recieveCurrentState(){
+    this.socketIoService.recieveCurrentState().subscribe((data: {isGameStarted: boolean}) => {      
+      this.isGameStarted = data.isGameStarted[0];
+    });
+  }
+
+  currentStateUpdate(gameId) {
+    this.socketIoService.currentStateUpdate(gameId);
   }
 }

@@ -40,70 +40,67 @@ export class LobbyComponent implements OnInit {
   this.sharedDataService.setNickname(nickname);
   this.sharedDataService.setGameId(uuid);
     
-    this.router.navigate(['/game', uuid]);
+  this.router.navigate(['/game', uuid]);
   }
 
   joinGame() {
     const nickname = (document.getElementById('nickname') as HTMLInputElement).value;
     const gameLinkInput = document.getElementById('gamelink') as HTMLInputElement;
-  
     const gameId = gameLinkInput.value.trim().split('/').pop();
 
-    const usersCount = this.sharedDataService.getUsersListCount();
-    const usersList = this.sharedDataService.getUsersList();
-    for (let i = 0; i < usersCount; i++) {
-      if (usersList[i].nickname == nickname) {
-        this.matsnackBar.open('Šajā istabā jau ir lietotājs ar šadu segvārdu', 'Aizvērt', {
+    if(this.sharedDataService.getIsGameStarted)
+    {
+      if (!nickname) {
+        // NickName is empty
+        this.matsnackBar.open('Lūdzu ievadiet segvārdu', 'Aizvērt', {
           duration: 3000,
           horizontalPosition: 'center',
           verticalPosition: 'bottom',
         });
         return;
       }
+  
+      const usersList = this.sharedDataService.getUsersList();
+      const usersCount = usersList.length;
+      for (let i = 0; i < usersCount; i++) {
+        if (usersList[i].nickname == nickname) {
+          this.matsnackBar.open('Šajā istabā jau ir lietotājs ar šadu segvārdu', 'Aizvērt', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          });
+          return;
+        }
+      }
+  
+  
+      if (!gameId) {
+        // Game ID is empty
+        this.matsnackBar.open('Lūdzu ievadiet spēles ID', 'Aizvērt', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+        return;
+      }
+  
+    if (usersCount > 5) {
+      // Maximum user count reached
+      this.matsnackBar.open('Nevar pievienoties istabai, jo ir sasniegts maksimālais spelētāju skaits', 'Aizvērt', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      });
+      return;
     }
     
-    if (!nickname) {
-      // NickName is empty
-      this.matsnackBar.open('Lūdzu ievadiet segvārdu', 'Aizvērt', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-      });
-      return;
+      this.sharedDataService.setNickname(nickname);
+      this.sharedDataService.setGameId(gameId);
+      // Navigate to the game component with the game ID as a parameter
+      this.router.navigate(['/game', gameId]);
     }
-
-
-    if (!gameId) {
-      // Game ID is empty
-      this.matsnackBar.open('Lūdzu ievadiet spēles ID', 'Aizvērt', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-      });
-      return;
-    }
-
-  if (usersCount > 5) {
-    // Maximum user count reached
-    this.matsnackBar.open('Nevar pievienoties istabai, jo ir sasniegts maksimālais spelētāju skaits', 'Aizvērt', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
-    return;
   }
-  
-    // Set the nickname and gameId in the shared data service
-    this.sharedDataService.setNickname(nickname);
-    this.sharedDataService.setGameId(gameId);
-  
-    // Connect to the socket
-    this.socketIoService.connect(gameId, nickname);
-  
-    // Navigate to the game component with the game ID as a parameter
-    this.router.navigate(['/game', gameId]);
-  }
-
+   
   openRules() {
     this.matDialog.open(GameRulesDialogComponent, {
       width: '1000px', // Set the width of the dialog

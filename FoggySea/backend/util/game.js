@@ -328,7 +328,7 @@ function  createGoldenShips()
     createSpecialTiles(tileTypes.ship, tileTypes.goldenShip, gameSettings.goldenShips);
     }
 
-    function addUser(usersList, nickname, gameId) {
+    function addUser(usersList, nickname) {
         listLength = usersList.length;
         addAnotherUser = true;
         isHost = true;
@@ -352,7 +352,6 @@ function  createGoldenShips()
                 playerId: listLength,
                 isHost: isHost,
                 nickname: nickname,
-                gameId: gameId,
                 points: 0,
                 currentTurn: isCurrentTurn,
                 skippedTurn: false
