@@ -114,17 +114,21 @@ export class GameComponent implements OnInit {
   }
 
   startGame() {
-    if (this.usersList.length < 1) {
+  /*   if (this.usersList.length < 2) {
       this.snackbar.open('Lai uzsāktu spēli jābūt vismaz diviem dalībniekiem', 'Aizvērt', {
         duration: 3000, // Duration in milliseconds
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
       });
       return;
-    }
+    } */
+    this.isGameOver = false;
     this.isGameStarted = true;
     this.socketIoService.startGame(this.gameId, this.isGameStarted);
     this.currentUser = this.usersList.find(user => user.playerId == 0);
+    this.usersList.forEach(user=>{
+      user.points = 0;
+    })
   }
 
   recieveStartGame() {
@@ -144,11 +148,8 @@ recieveGameUpdate() {
     {
       //this.recieveJoinedPlayers();
       this.openGameEndDialog(this.usersList);
-      this.isGameOver = false;
+      this.isGameOver = true;
       this.isGameStarted = false;
-      this.usersList.forEach(user=>{
-        user.points = 0;
-      })
     }
   });
 }

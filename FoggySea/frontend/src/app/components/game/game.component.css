@@ -21,27 +21,39 @@
 }
 
 @media (max-width: 992px) {
-  /* Modify grid for screens up to 992px wide */
+  .button {
+    top: 75px;
+  }
   .grid {
-    grid-template-columns: repeat(4, 1fr);
+    width: 450px;
+    height: 450px;
+    margin: 135px 0;
+  }
+  .box {
+    width: 450px !important;
+    height: 450px !important;
+    margin: 135px 0 !important;
+  }
+  .players-list {
+    margin: 135px 15px !important;
   }
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .grid {
-    width: 100%;
-    height: auto;
-    grid-template-columns: repeat(2, 1fr);
-    margin: 30px 0;
+    width: 400px;
+    height: 400px;
+    margin: 150px 0;
   }
-}
-
-@media (max-width: 576px) {
-  .grid {
-    grid-template-columns: repeat(1, 1fr);
-    gap: 10px;
+  .box {
+    width: 400px !important;
+    height: 400px !important;
+    margin: 150px 0 !important;
   }
-}
+  .players-list {
+    margin: 150px 15px !important;
+  }
+} */
 
 .grid-computer {
   aspect-ratio: 1/ 1;
@@ -72,8 +84,8 @@
   border-radius: 6px;
   background: #e0e0e0;
   box-shadow: 5px 5px 15px #bebebe, -5px -5px 15px #ffffff;
-  width: 200px;
-  height: 235px;
+  width: 235px;
+  height: 270px;
   margin: 75px 15px;
 }
 
@@ -83,13 +95,13 @@
 
 .players-list ul li {
   color: #3498db;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: bold;
   margin-top: 10px;
   margin-left: 15px;
 }
 
-.players-list h4 {
+.players-list h2 {
   background-color: #a2d2ff;
   font-weight: bold;
   text-align: center;
@@ -100,8 +112,8 @@
 }
 
 .players-list button {
-  margin-top: 188px;
-  margin-left: 30px;
+  margin-top: 225px;
+  margin-left: 50px;
 }
 
 .checkmark {
@@ -128,7 +140,7 @@
     color: #3498db;
   }
   50% {
-    color: #97caed;
+    color: #185d8b;
   }
   100% {
     color: #3498db;
@@ -148,6 +160,8 @@
 
 .emptyTile {
   background-image: url(/assets/empty.png);
+  background-color: #ccc;
+  background-blend-mode: multiply;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

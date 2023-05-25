@@ -21,18 +21,6 @@ const tileTypes = Object.freeze({
     kraken: "kraken"
 })
 
-const gameSettings = {
-    shipTypes: [
-        6,5,4,3,3,2,2,2,1,1,1,1
-    ],
-    columns: 12,
-    rows: 12,
-    goldenShips: 3,
-    krakens: 12,
-    mermaids: 6,
-    pirates: 6
-}
-
 
 var shipsList = []
 var tilesList = []
@@ -42,18 +30,19 @@ var tempTileList = []
 var tempShip = []
 var earnedPoints;
 var tempCurrentShipsCount;
+var gameSettings = [];
 
-function createGame() {
+function createGame(tempGameSettings) {
     return new Promise(function (resolve,reject){
+        gameSettings = tempGameSettings;
         shipsList = [];
         tempTileList = [];
         tempShip = [];
         this.tilesList = [];
-            console.log("6");
-        for (var y = 0; y < gameSettings.rows; y++)
+        for (var y = 0; y < gameSettings.gameRows; y++)
         {
             var columns = [];
-            for(var x = 0; x < gameSettings.columns; x++)
+            for(var x = 0; x < gameSettings.gameColumns; x++)
             {
             var object = {
             isPossibleShipTile: true,
@@ -124,7 +113,6 @@ function controlIfShipDestroyed(clickedTile){
 
     if (tempCurrentShipsCount == 0)
     {
-        console.log("5")
         tempIsGameOver = true;   
         fillRestOfRemainingTiles();
     }
@@ -133,9 +121,9 @@ function controlIfShipDestroyed(clickedTile){
 
 
 function  fillRestOfRemainingTiles(){
-    for (var y = 0; y < gameSettings.rows; ++y)
+    for (var y = 0; y < gameSettings.gameRows; ++y)
     {
-        for (var x = 0; x < gameSettings.columns; ++x)
+        for (var x = 0; x < gameSettings.gameColumns; ++x)
         {
         this.tilesList[y][x].selected = true;
         if(this.tilesList[y][x].tileType == tileTypes.default)
@@ -153,8 +141,8 @@ function createShips(){
         var makeThisShipAgain = true;
         while(makeThisShipAgain)
         {
-            var x = getRandomInt(gameSettings.rows);
-            var y = getRandomInt(gameSettings.columns);
+            var x = getRandomInt(gameSettings.gameRows);
+            var y = getRandomInt(gameSettings.gameColumns);
             tempTileList = [];
             tempShip = [];
             if(this.tilesList[y][x].canPutShip == true)
@@ -279,7 +267,7 @@ function  clearPosibleShipTiles(tempList){
 
 
 function  tileOnBounds(y, x){
-    if (x >= 0 && x < gameSettings.rows && y >= 0 && y < gameSettings.columns)
+    if (x >= 0 && x < gameSettings.gameRows && y >= 0 && y < gameSettings.gameColumns)
         return true;
 
     return false;
@@ -291,9 +279,9 @@ function  getRandomInt(max) {
 
 function  createSpecialTiles(validationTileType, tileType, count){
     tempTileList = [];
-    for (var y = 0; y < gameSettings.rows; ++y)
+    for (var y = 0; y < gameSettings.gameRows; ++y)
     {
-        for (var x = 0; x < gameSettings.columns; ++x)
+        for (var x = 0; x < gameSettings.gameColumns; ++x)
         {
         if (this.tilesList[y][x].tileType == validationTileType)
             tempTileList.push(this.tilesList[y][x]);
@@ -365,9 +353,10 @@ function  createGoldenShips()
         }
     }
 
-    function updateGame(tilesList, clickedTile, usersList, currentUser, isGameOver, currentShipsCount) {
+    function updateGame(tilesList, clickedTile, usersList, currentUser, isGameOver, currentShipsCount, tempGameSettings) {
         return new Promise(function (resolve,reject){
         this.tilesList = tilesList;
+        gameSettings = tempGameSettings;
         tempIsGameOver =  isGameOver;
         tempCurrentShipsCount = currentShipsCount;
         controlIfShipDestroyed(clickedTile);
@@ -433,14 +422,21 @@ function  createGoldenShips()
         return usersList;
     }
 
+    function converShipTypes(gameSettings)
+    {
+        const convertedSizes =  gameSettings.shipTypes.toString().split('').map(Number);
+        gameSettings.shipTypes = convertedSizes;
+        return gameSettings;
+    }
+
     module.exports = {
         createGame,
         updateGame,
         addUser,
-        createNewHost
+        createNewHost,
+        getRandomInt,
+        converShipTypes
     };
-
-
 
 
 

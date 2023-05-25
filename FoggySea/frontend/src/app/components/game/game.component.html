@@ -6,7 +6,7 @@
 	<ng-container *ngIf="!isGameStarted && pageUser?.isHost">
 		<button class="button" mat-raised-button color="primary" (click)="startGame()">Sākt spēli</button>
 	</ng-container>
-	<div class="main-container" *ngIf="isGameStarted">
+	<div class="main-container" *ngIf="isGameStarted || isGameOver">
 		<div class="grid">
 			<ng-container *ngFor="let tiles of tilesList">
 				<ng-container *ngFor="let tile of tiles">
@@ -24,7 +24,7 @@
 			</ng-container>
 		</div>
 		<div class="users players-list">
-			<h4>Segvārds | Punkti</h4>
+			<h2>Segvārds | Punkti</h2>
 			<ul>
 				<li *ngFor="let user of usersList; let i = index">
 					<span *ngIf="pageUser.playerId == i" class="checkmark">(Jūs)&nbsp;</span>
@@ -46,7 +46,7 @@
 			<span class="loader"></span>
 		</div>
 		<div class="users players-list">
-			<h4>Segvārds | Punkti</h4>
+			<h2>Segvārds | Punkti</h2>
 			<ul>
 				<li *ngFor="let user of usersList; let i = index">
 					<span *ngIf="pageUser.playerId == i" class="checkmark">(Jūs)</span>
