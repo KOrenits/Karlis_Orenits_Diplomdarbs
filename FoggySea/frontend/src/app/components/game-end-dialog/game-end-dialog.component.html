@@ -1,9 +1,15 @@
-<h1>End Game</h1>
-<ul>
-  <li *ngFor="let user of usersList">
-    <span *ngIf="user.points == highestPointsUser.points" class="checkmark">&#10004;&nbsp;</span>
-    <span *ngIf="user.points != highestPointsUser.points"></span>
-    {{ user.nickname }} -- {{ user.points }}
-  </li>
-</ul>
-<button mat-button (click)="closeDialog()">Close</button>
+<h1 mat-dialog-title>Spēle beigusies!</h1>
+<hr>
+<mat-dialog-content class="mat-typography">
+	<h3>Spēles rezultāti</h3>
+	<ul>
+		<li *ngFor="let user of usersList">
+			<span *ngIf="user.points == highestPointsUser.points">👑</span>
+			<span *ngIf="user.points != highestPointsUser.points"></span>
+			{{ user.nickname }} | {{ user.points }}
+		</li>
+	</ul>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button mat-raised-button mat-dialog-close color="warn">Aizvērt</button>
+</mat-dialog-actions>

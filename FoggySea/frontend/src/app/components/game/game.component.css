@@ -20,6 +20,29 @@
   margin: 75px 0;
 }
 
+@media (max-width: 992px) {
+  /* Modify grid for screens up to 992px wide */
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    width: 100%;
+    height: auto;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 30px 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .grid {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+  }
+}
+
 .grid-computer {
   aspect-ratio: 1/ 1;
   display: flex;
@@ -28,8 +51,8 @@
 }
 
 .box {
-  background-color: lightslategray;
-  border: 1px solid black;
+  background-color: #8d99ae;
+  border: 1px solid #000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,7 +68,10 @@
 }
 
 .players-list {
-  border: 1px solid black;
+  border: 1px solid #000;
+  border-radius: 6px;
+  background: #e0e0e0;
+  box-shadow: 5px 5px 15px #bebebe, -5px -5px 15px #ffffff;
   width: 200px;
   height: 235px;
   margin: 75px 15px;
@@ -56,17 +82,20 @@
 }
 
 .players-list ul li {
-  color: cadetblue;
-  font-size: 18px;
+  color: #3498db;
+  font-size: 17px;
   font-weight: bold;
   margin-top: 10px;
   margin-left: 15px;
 }
 
 .players-list h4 {
+  background-color: #a2d2ff;
   font-weight: bold;
   text-align: center;
   border-bottom: 1px solid #000;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
   margin: 0;
 }
 
@@ -75,36 +104,81 @@
   margin-left: 30px;
 }
 
+.checkmark {
+  color: #e74c3c;
+  font-weight: normal;
+}
+
+.points {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.pipe {
+  color: #000;
+  font-weight: normal;
+}
+
+.userTurn {
+  animation: flashing 1s infinite linear;
+}
+
+@keyframes flashing {
+  0% {
+    color: #3498db;
+  }
+  50% {
+    color: #97caed;
+  }
+  100% {
+    color: #3498db;
+  }
+}
+
 .defaultTile {
   background-color: gray;
 }
 
 .shipTile {
-  background-color: cyan;
+  background-image: url(/assets/regular_ship.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .emptyTile {
-  background-color: blue;
+  background-image: url(/assets/empty.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .goldenShipTile {
-  background-color: gold;
+  background-image: url(/assets/golden_ship.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .pirateTile {
-  background-color: black;
+  background-image: url(/assets/pirate.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .mermaidTile {
-  background-color: red;
+  background-image: url(/assets/mermaid.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .krakenTile {
-  background-color: purple;
-}
-
-.userTurn {
-  color: blue;
+  background-image: url(/assets/kraken.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .loader {

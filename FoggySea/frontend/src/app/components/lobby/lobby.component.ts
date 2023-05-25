@@ -48,8 +48,7 @@ export class LobbyComponent implements OnInit {
     const gameLinkInput = document.getElementById('gamelink') as HTMLInputElement;
     const gameId = gameLinkInput.value.trim().split('/').pop();
 
-    if(this.sharedDataService.getIsGameStarted)
-    {
+
       if (!nickname) {
         // NickName is empty
         this.matsnackBar.open('Lūdzu ievadiet segvārdu', 'Aizvērt', {
@@ -98,7 +97,6 @@ export class LobbyComponent implements OnInit {
       this.sharedDataService.setGameId(gameId);
       // Navigate to the game component with the game ID as a parameter
       this.router.navigate(['/game', gameId]);
-    }
   }
    
   openRules() {

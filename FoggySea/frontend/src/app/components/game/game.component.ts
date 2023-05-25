@@ -15,18 +15,18 @@ import { GameEndDialogComponent } from '../game-end-dialog/game-end-dialog.compo
 })
 
 export class GameComponent implements OnInit {
-  gameId;
-  nickname;
-  tilesList;
-  usersList = [];
-  tile;
-  isGameStarted: boolean = false;
-  hostUser: any = {}; // 
-  isHostUser: boolean = false;
-  clickedTile;
-  currentUser;
-  pageUser;
-  isGameOver: boolean = false;
+    gameId;
+    nickname;
+    tilesList;
+    usersList = [];
+    tile;
+    isGameStarted: boolean = false;
+    hostUser: any = {}; // 
+    isHostUser: boolean = false;
+    clickedTile;
+    currentUser;
+    pageUser;
+    isGameOver: boolean = false;
 
   constructor(
     private socketIoService: SocketioService,
@@ -57,32 +57,30 @@ export class GameComponent implements OnInit {
           //this.socketIoService.requestUsers(this.gameId);
           this.recieveJoinedPlayers();
           this.recieveStartGame();
-          //this.recieveGameUpdate();
+          this.recieveGameUpdate();
           //this.recieveCurrentState();
-          this.currentStateUpdate(this.gameId);
+          //this.currentStateUpdate(this.gameId);
           if(this.isGameStarted)
           {
             this.isGameStarted = this.isGameStarted;
           } 
-        
-  
   }
 
-  @HostListener('window:popstate', ['$event'])
-handlePopState(event: Event) {
-  event.preventDefault();
-  this.leaveRoom(this.usersList.find(user => user.nickname === this.nickname));
-}
 
-@HostListener('window:unload', ['$event'])
-handleUnload(event: Event) {
-  // Save relevant data to restore the user's session when they return
-  this.leaveRoom(this.usersList.find(user => user.nickname === this.nickname));
-}
+      @HostListener('window:popstate', ['$event'])
+    handlePopState(event: Event) {
+      event.preventDefault();
+      this.leaveRoom(this.usersList.find(user => user.nickname === this.nickname));
+    }
 
+    @HostListener('window:unload', ['$event'])
+    handleUnload(event: Event) {
+      // Save relevant data to restore the user's session when they return
+      this.leaveRoom(this.usersList.find(user => user.nickname === this.nickname));
+    }
   
   clickTile(tile) {
-    this.currentUser = this.usersList.find((user) => user.currentTurn);
+   this.currentUser = this.usersList.find((user) => user.currentTurn);
   
     if (!this.currentUser || this.currentUser.nickname !== this.nickname) {
       this.snackbar.open('Šobrīd nav Jūsu kārta veikt gājienu', 'Aizvērt', {
@@ -92,40 +90,38 @@ handleUnload(event: Event) {
       });
       return;
     }
-
+  
     // Only the current user can send the game update
     this.socketIoService.gameUpdate(this.gameId, this.tilesList, tile, this.usersList, this.currentUser, this.isGameOver);
+    
   }
 
-  openGameEndDialog(usersList){
+  openGameEndDialog(usersList): void {
     this.usersList = usersList;
     this.matDialog.open(GameEndDialogComponent, {
-      width: '400px',
+      width: '600px',
       data: { usersList: this.usersList }
     });
   }
 
   recieveJoinedPlayers() {
     this.socketIoService.recieveJoinedPlayers().subscribe((usersList) => {
-      //this.currentStateUpdate(this.gameId);
       this.usersList = usersList;
       this.pageUser = usersList.find((user) => user.nickname == this.nickname);
       this.hostUser = usersList.find((user) => user.isHost == true);
-      //this.isHostUser = usersList.find((user) => user.isHost)?.nickname === this.nickname;
       this.sharedDataService.setUsersList(this.usersList);
     });
   }
-  
 
   startGame() {
-  /*   if (this.usersList.length < 2) {
+    if (this.usersList.length < 1) {
       this.snackbar.open('Lai uzsāktu spēli jābūt vismaz diviem dalībniekiem', 'Aizvērt', {
         duration: 3000, // Duration in milliseconds
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
       });
       return;
-    } */
+    }
     this.isGameStarted = true;
     this.socketIoService.startGame(this.gameId, this.isGameStarted);
     this.currentUser = this.usersList.find(user => user.playerId == 0);
@@ -139,7 +135,7 @@ handleUnload(event: Event) {
 }
 
 recieveGameUpdate() {
-  this.socketIoService.recieveGameUpdate().subscribe((data: { tilesList: any, usersList: any, currentUser: any, isGameOver: boolean }) => {      
+  this.socketIoService.recieveGameUpdate().subscribe((data: { tilesList: any, usersList: any, currentUser: any, isGameOver: boolean }) => {    
     this.tilesList = data.tilesList;
     this.usersList = data.usersList;
     this.currentUser = data.currentUser;
@@ -149,12 +145,15 @@ recieveGameUpdate() {
       //this.recieveJoinedPlayers();
       this.openGameEndDialog(this.usersList);
       this.isGameOver = false;
+      this.isGameStarted = false;
+      this.usersList.forEach(user=>{
+        user.points = 0;
+      })
     }
   });
 }
 
-leaveRoom(user)
-{
+leaveRoom(user){
   console.log(user);
    // Emit the "leave" event to the server
    this.socketIoService.leaveRoom(this.usersList, user, this.gameId);

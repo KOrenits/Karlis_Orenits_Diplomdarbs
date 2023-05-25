@@ -24,17 +24,17 @@
 			</ng-container>
 		</div>
 		<div class="users players-list">
-			<h4>Pieslēgušies spēlētāji</h4>
+			<h4>Segvārds | Punkti</h4>
 			<ul>
 				<li *ngFor="let user of usersList; let i = index">
-					<span *ngIf="pageUser.playerId == i" class="checkmark">&#10004;&nbsp;</span>
+					<span *ngIf="pageUser.playerId == i" class="checkmark">(Jūs)&nbsp;</span>
 					<span *ngIf="pageUser.playerId != i"></span>
 					<span [ngClass]="{
 									'userTurn': user.currentTurn,
 									'userNoTurn': !user.currentTurn
           							}">{{ user.nickname }}</span>
 
-					- Punkti: {{ user.points }}
+					&nbsp;<span class="pipe">|</span>&nbsp;<span class="points">{{ user.points }}</span>
 				</li>
 			</ul>
 		</div>
@@ -46,12 +46,12 @@
 			<span class="loader"></span>
 		</div>
 		<div class="users players-list">
-			<h4>Pieslēgušies spēlētāji</h4>
+			<h4>Segvārds | Punkti</h4>
 			<ul>
 				<li *ngFor="let user of usersList; let i = index">
-					<span *ngIf="pageUser.playerId == i" class="checkmark">&#10004;&nbsp;</span>
+					<span *ngIf="pageUser.playerId == i" class="checkmark">(Jūs)</span>
 					<span *ngIf="pageUser.playerId != i"></span>
-					{{ user.nickname }} - Punkti: {{ user.points }}
+					{{ user.nickname }} <span class="pipe">|</span>&nbsp;<span class="points">{{ user.points }}</span>
 				</li>
 			</ul>
 			<button mat-raised-button color="warn" (click)="leaveRoom(pageUser)">Pamest istabu</button>

@@ -27,8 +27,4 @@ export class GameEndDialogComponent {
       }
     });
   }
-
-  closeDialog(): void {
-    this.dialogRef.close();
-  }
 }
