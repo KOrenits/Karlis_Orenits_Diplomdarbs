@@ -9,16 +9,18 @@ import { ObserversModule } from '@angular/cdk/observers';
 })
 export class SocketioService {
   socket: Socket;
-  isGameStarted: boolean;
 
   constructor() {}
 
-  connect(gameId, nickname) {
-    const host = window.location.hostname;// Get the host IP dynamically
+  connect() {
+    const host = window.location.hostname;
     this.socket = io(`http://${host}:3000`);
-    this.socket.emit('joinRoom', {nickname: nickname, gameId: gameId });
   }
 
+  joinRoom(gameId,nickname)
+  {
+    this.socket.emit('joinRoom', {nickname: nickname, gameId: gameId });
+  }
 
   gameUpdate(gameId, tilesList, clickedTile, usersList, currentUser, isGameStarted) {
     this.socket.emit('gameUpdate', { 

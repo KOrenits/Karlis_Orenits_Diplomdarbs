@@ -25,7 +25,7 @@ io.on("connection", (socket) => {
     console.log("a user connected");
     socket.on('startGame', ({ gameId, isGameStarted }) => {
       getGameSettingsCount().then((count)=>{
-        var settingsId = getRandomInt(count)
+        var settingsId = getRandomInt(count) + 1;
           getGameSettingsById(settingsId).then((gameSettings) => {
             usersGameSettings[gameId] = []; // Initialize as an empty array if it doesn't exist
             usersGameSettings[gameId] = gameSettings
@@ -71,6 +71,7 @@ io.on("connection", (socket) => {
             users[gameId] = createNewHost(users[gameId]);
         }
         usersList = users[gameId];
+        
         io.to(gameId).emit('users', usersList);
         console.log(`User ${nickname} joined room ${gameId}`);
     });

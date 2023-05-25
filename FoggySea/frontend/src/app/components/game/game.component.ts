@@ -51,9 +51,8 @@ export class GameComponent implements OnInit {
         });  */
           this.gameId = this.sharedDataService.getGameId();
           this.nickname = this.sharedDataService.getNickname();
-          
-
-          this.socketIoService.connect(this.gameId, this.nickname);
+          this.socketIoService.connect();
+          this.socketIoService.joinRoom(this.gameId, this.nickname);
           //this.socketIoService.requestUsers(this.gameId);
           this.recieveJoinedPlayers();
           this.recieveStartGame();
@@ -114,14 +113,14 @@ export class GameComponent implements OnInit {
   }
 
   startGame() {
-  /*   if (this.usersList.length < 2) {
+    if (this.usersList.length < 2) {
       this.snackbar.open('Lai uzsāktu spēli jābūt vismaz diviem dalībniekiem', 'Aizvērt', {
         duration: 3000, // Duration in milliseconds
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
       });
       return;
-    } */
+    }
     this.isGameOver = false;
     this.isGameStarted = true;
     this.socketIoService.startGame(this.gameId, this.isGameStarted);
@@ -155,7 +154,6 @@ recieveGameUpdate() {
 }
 
 leaveRoom(user){
-  console.log(user);
    // Emit the "leave" event to the server
    this.socketIoService.leaveRoom(this.usersList, user, this.gameId);
    //this.recieveJoinedPlayers();
