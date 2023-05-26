@@ -4,9 +4,8 @@
 	<h2>Spēles rezultāti</h2>
 	<ul>
 		<li *ngFor="let user of usersList">
-			<span *ngIf="user.points == highestPointsUser.points" class="colored">👑</span>
-			<span *ngIf="user.points != highestPointsUser.points"></span>
-			{{ user.nickname }} | {{ user.points }}
+			<span *ngIf="user.points == highestPoints" class="colored">👑{{ user.nickname }} | {{ user.points }}</span>
+			<span *ngIf="user.points != highestPoints">{{ user.nickname }} | {{ user.points }}</span>		
 		</li>
 	</ul>
 </mat-dialog-content>

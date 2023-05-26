@@ -21,7 +21,7 @@ export class GameComponent implements OnInit {
     usersList = [];
     tile;
     isGameStarted: boolean = false;
-    hostUser: any = {}; // 
+    hostUser: any = {}; // a
     isHostUser: boolean = false;
     clickedTile;
     currentUser;

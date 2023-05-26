@@ -10,7 +10,7 @@
 		<div class="grid">
 			<ng-container *ngFor="let tiles of tilesList">
 				<ng-container *ngFor="let tile of tiles">
-					<div class="grid-computer defaultTile" *ngIf="!tile.selected" (click)="clickTile(tile)"></div>
+					<div class="grid-computer defaultTile" *ngIf="!tile.selected && pageUser.skippedTurn != 1" (click)="clickTile(tile)"></div>
 					<div *ngIf="tile.selected" class="grid-computer" [ngClass]="{ 
 																				'shipTile': tile.tileType == 'ship',
 																				'emptyTile': tile.tileType == 'empty',
@@ -33,11 +33,15 @@
 									'userTurn': user.currentTurn,
 									'userNoTurn': !user.currentTurn
           							}">{{ user.nickname }}</span>
-
 					&nbsp;<span class="pipe">|</span>&nbsp;<span class="points">{{ user.points }}</span>
+					<span *ngIf="user.skippedTurn > 0" class="checkmark"> izlaiž</span>
+					<span *ngIf="user.skippedTurn == 0"></span>
+					<span *ngIf="user.extraTurn > 0" class="checkmark"> gājieni - {{user.extraTurn + 1}} </span>
+					<span *ngIf="user.extraTurn == 0"></span>
 				</li>
 			</ul>
 		</div>
+		
 	</div>
 	<div class="main-container" *ngIf="!isGameStarted">
 		<div class="box">

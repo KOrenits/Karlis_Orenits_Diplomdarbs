@@ -10,7 +10,6 @@ export class GameEndDialogComponent {
   usersList: any[]; // Define a property to hold the usersList data
   topPlace: any[];
   highestPoints = 0;
-  highestPointsUser;
 
   constructor(
     public dialogRef: MatDialogRef<GameEndDialogComponent>,
@@ -23,7 +22,6 @@ export class GameEndDialogComponent {
     this.usersList.forEach(user => {
       if (user.points >= this.highestPoints) {
         this.highestPoints = user.points;
-        this.highestPointsUser = user;
       }
     });
   }

@@ -342,7 +342,8 @@ function  createGoldenShips()
                 nickname: nickname,
                 points: 0,
                 currentTurn: isCurrentTurn,
-                skippedTurn: false
+                skippedTurn: 0,
+                extraTurn: 0
             }
             
             return object1;
@@ -359,52 +360,149 @@ function  createGoldenShips()
         gameSettings = tempGameSettings;
         tempIsGameOver =  isGameOver;
         tempCurrentShipsCount = currentShipsCount;
+        earnedPoints = 0;
         controlIfShipDestroyed(clickedTile);
-    
-        if (earnedPoints > 0) 
-        {
-            currentUser.points = currentUser.points + earnedPoints;
-            const updatedUsers =  usersList.map((user) => {
-                if (user.playerId == currentUser.playerId) {
-                    return { ...currentUser };
-                }
-                return user;
-            });
-            usersList = updatedUsers;
-            earnedPoints = 0;
-        } 
-        else 
-        {
-            currentUser.currentTurn = false;
-            const updatedUsers =  usersList.map((user) => {
-                if (user.playerId == currentUser.playerId) {
-                    return { ...currentUser };
-                }
-                return user;
-            });
-            usersList = updatedUsers;
-            var nextPlayerId = currentUser.playerId;
-            if (nextPlayerId == usersList.length - 1) 
+            if(clickedTile.tileType == tileTypes.mermaid)
             {
-                nextPlayerId = 0;
-            } 
-            else 
-            {
-                nextPlayerId = currentUser.playerId + 1;
+                currentUser.extraTurn = currentUser.extraTurn + 1
+                currentUser.currentTurn = true;
+                currentUser.points = currentUser.points + earnedPoints
+                const updatedUsers =  usersList.map((user) => {
+                    if (user.playerId == currentUser.playerId) {
+                        return { ...currentUser };
+                    }
+                    return user;
+                });
+                usersList = updatedUsers;
             }
-            var nextUser = usersList.find((user) => user.playerId == nextPlayerId);
-            nextUser.currentTurn = true;
-            const newUpdatedUsers =  usersList.map((user) => {
-                if (user.playerId == nextUser.playerId) {
-                    return { ...nextUser };
+            if(clickedTile.tileType == tileTypes.pirate)
+            {
+                if(currentUser.extraTurn > 0)
+                {
+                    currentUser.extraTurn = currentUser.extraTurn - 1;
                 }
-                return user;
-            });
-            usersList = newUpdatedUsers;
-            currentUser = nextUser;
+                else
+                {
+                    currentUser.currentTurn = false;
+                }
+                earnedPoints = -1;
+                currentUser.points = currentUser.points + earnedPoints
+                const updatedUsers =  usersList.map((user) => {
+                    if (user.playerId == currentUser.playerId) {
+                        return { ...currentUser };
+                    }
+                    return user;
+                });
+                usersList = updatedUsers;
+            }
+             if(clickedTile.tileType == tileTypes.kraken)
+            {
+
+                currentUser.extraTurn = 0;
+                currentUser.currentTurn = false;
+                currentUser.skippedTurn = 2;
+                const updatedUsers =  usersList.map((user) => {
+                    if (user.playerId == currentUser.playerId) {
+                        return { ...currentUser };
+                    }
+                    return user;
+                });
+                usersList = updatedUsers;
+            }
+            if(clickedTile.tileType == tileTypes.ship || clickedTile.tileType == tileTypes.goldenShip)
+            {
+                if(clickedTile.tileType == tileTypes.ship )
+                {
+                    earnedPoints = 1;
+                    currentUser.currentTurn = true
+                }
+                if(clickedTile.tileType == tileTypes.goldenShip)
+                {
+                    earnedPoints =2;
+                    currentUser.currentTurn = true
+                }
+                currentUser.points = currentUser.points + earnedPoints
+                const updatedUsers =  usersList.map((user) => {
+                    if (user.playerId == currentUser.playerId) {
+                        return { ...currentUser };
+                    }
+                    return user;
+                });
+                usersList = updatedUsers;
+
+            }
+            if(clickedTile.tileType == tileTypes.default)
+            {
+                if(currentUser.extraTurn > 0)
+                {
+                    currentUser.extraTurn = currentUser.extraTurn - 1;
+                }
+                else
+                {
+                    currentUser.currentTurn = false;
+                }
+                currentUser.points = currentUser.points + earnedPoints
+                const updatedUsers =  usersList.map((user) => {
+                    if (user.playerId == currentUser.playerId) {
+                        return { ...currentUser };
+                    }
+                    return user;
+                });
+                usersList = updatedUsers;
+            }
+
             
-        }
-        //rentShipsCount = tempCurrentShipsCount;
+
+            var findNextUser = true;
+            if(currentUser.currentTurn == false && currentUser.extraTurn == 0)
+            {
+                var nextPlayerId = currentUser.playerId;
+                console.log("1");
+                while(findNextUser)
+                {
+                    if (currentUser.playerId == usersList.length - 1) 
+                    {
+                        nextPlayerId = 0;
+                    } 
+                    else 
+                    {
+                        nextPlayerId = currentUser.playerId + 1;
+                    }
+                    var nextUser = usersList.find((user) => user.playerId == nextPlayerId);
+                    if(nextUser.skippedTurn > 0)
+                    {
+                        nextUser.skippedTurn = currentUser.skippedTurn -1;
+                    }
+                    else
+                    {
+                        nextUser.currentTurn = true;
+                        findNextUser = false;
+                    }
+                    const newUpdatedUsers =  usersList.map((user) => {
+                        if (user.playerId == nextUser.playerId) {
+                            return { ...nextUser };
+                        }
+                        return user;
+                    });
+                    usersList = newUpdatedUsers;
+                    currentUser = nextUser;
+                }
+            }
+            else
+            {
+                console.log("2")
+                currentUser.currentTurn = true;
+                const updatedUsers =  usersList.map((user) => {
+                    if (user.playerId == currentUser.playerId) {
+                        return { ...currentUser };
+                    }
+                    return user;
+                });
+                usersList = updatedUsers;
+            }
+           
+               
+            
         resolve({ tilesList: this.tilesList, usersList: usersList, currentUser: currentUser, isGameOver: tempIsGameOver, currentShipsCount: tempCurrentShipsCount});
         });
     }

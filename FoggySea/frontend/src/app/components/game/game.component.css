@@ -137,13 +137,13 @@
 
 @keyframes flashing {
   0% {
-    color: #3498db;
+    color: blue;
   }
   50% {
-    color: #185d8b;
+    color: #3498db;
   }
   100% {
-    color: #3498db;
+    color: blue;
   }
 }
 
