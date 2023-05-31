@@ -81,11 +81,11 @@ export class GameComponent implements OnInit {
   }
 
   startGame() {
-   /*  if (this.usersList.length < 2) 
+    if (this.usersList.length < 2) 
     {
       this.sharedDataService.openDialog('Lai uzsāktu spēli jābūt vismaz diviem dalībniekiem');
       return
-    } */
+    }
     this.isGameOver = false;
     this.isGameStarted = true;
     this.socketIoService.startGame(this.gameId, this.isGameStarted);
