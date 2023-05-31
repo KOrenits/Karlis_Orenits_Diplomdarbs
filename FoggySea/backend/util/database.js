@@ -1,9 +1,7 @@
-
-  const { Sequelize, Model} = require('sequelize');
-// Create a new Sequelize instance
+const { Sequelize, Model} = require('sequelize');
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: '../database/foggySeaDatabase.sqlite', // Specify the path where you want to create the SQLite database file
+  storage: '../database/foggySeaDatabase.sqlite',
 });
 
 class Stats extends Model {}
@@ -87,87 +85,17 @@ GameSettings.init({
 
 sequelize.sync()
   .then(async () => {
-    console.error('Databse synchronized succesfully');
-
-   /*  const shipTypes = '654332211';
-    const gameColumns = 12;
-    const gameRows = 12;
-    const goldenShips = 8;
-    const krakens = 20;
-    const mermaids = 20;
-    const pirates = 10;
-
-    GameSettings.create({
-      shipTypes: shipTypes,
-      gameColumns: gameColumns,
-      gameRows: gameRows,
-      goldenShips: goldenShips,
-      krakens: krakens,
-      mermaids: mermaids,
-      pirates: pirates
-    }); */
-
-  /* GameSettings.findByPk(6)
-  .then((gameSettings) => {
-    if (gameSettings) {
-
-      // Update the shipTypes value
-      gameSettings.shipTypes = '999999';
-
-      // Save the updated gameSettings
-      gameSettings.save();
-    } else {
-      console.log('GameSettings not found.');
-    }
-  }) */
-   /*   
-    GameSettings.findAll()
-    .then((gameSettings) => {
-      console.log('All GameSettings:');
-      gameSettings.forEach((setting) => {
-        console.log('ID:', setting.id);
-        console.log('Ship Types:', setting.shipTypes);
-        console.log('Golden Ships:', setting.goldenShips);
-        console.log('Columns:', setting.gameColumns);
-        console.log('Rows:', setting.gameRows);
-        console.log('Krakens:', setting.krakens);
-        console.log('Mermaids:', setting.mermaids);
-        console.log('Pirates:', setting.pirates);
-        console.log('---');
-      });
-    }) */
-    // Process the retrieved game settings data as needed
+    console.error('Database synchronized succesfully');
   })
   
   .catch((error) => {
     console.error('Error synchronizing database:', error);
   });
 
-/*   const gameSettings = {
-    shipTypes: [
-        6,5,4,3,3,2,2,2,1,1,1,1
-    ],
-    columns: 12,
-    rows: 12,
-    goldenShips: 3,
-    krakens: 12,
-    mermaids: 6,
-    pirates: 6
-} */
-
 function getGameSettingsById(id) {
   return GameSettings.findByPk(id)
     .then((gameSettings) => {
       if (gameSettings) {
-/*         console.log('GameSettings found:');
-        console.log('ID:', gameSettings.id);
-        console.log('Ship Types:', gameSettings.shipTypes);
-        console.log('Golden Ships:', gameSettings.goldenShips);
-        console.log('Columns:', gameSettings.gameColumns);
-        console.log('Rows:', gameSettings.gameRows);
-        console.log('Krakens:', gameSettings.krakens);
-        console.log('Mermaids:', gameSettings.mermaids);
-        console.log('Pirates:', gameSettings.pirates); */
         return gameSettings.dataValues;
       }
      
@@ -191,8 +119,6 @@ function getGameSettingsCount() {
 }
 
 module.exports = {
-  //createDatabase,
-  //createGameSettings,
   getGameSettingsById,
   getGameSettingsCount
 };

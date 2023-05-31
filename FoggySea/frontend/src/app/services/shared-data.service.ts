@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -6,59 +7,44 @@ import { Injectable } from '@angular/core';
 export class SharedDataService {
   private readonly GAME_ID_KEY = 'gameId';
   private readonly NICKNAME_KEY = 'nickname';
-  private readonly IS_GAME_STARTED_KEY = 'isGameStarted';
 
-  private GameId: string;
-  private Nickname: string;
-  private UsersList: any[];
-  private IsGameStarted: boolean = false;
+  private gameId: string;
+  private nickname: string;
 
-  constructor() {
-    // Retrieve gameId and nickname from localStorage on initialization
-    this.GameId = localStorage.getItem(this.GAME_ID_KEY);
-    this.Nickname = localStorage.getItem(this.NICKNAME_KEY);
-    this.UsersList = JSON.parse(localStorage.getItem('usersList')) || [];
-    this.IsGameStarted = JSON.parse(localStorage.getItem(this.IS_GAME_STARTED_KEY)) || false;
-  }
-
-  setIsGameStarted(isGameStarted: boolean) {
-    this.IsGameStarted = isGameStarted;
-    // Save isGameStarted to localStorage
-    localStorage.setItem(this.IS_GAME_STARTED_KEY, JSON.stringify(isGameStarted));
-  }
-
-  getIsGameStarted() {
-    const isGameStarted = localStorage.getItem(this.IS_GAME_STARTED_KEY);
-    return isGameStarted ? JSON.parse(isGameStarted) : this.IsGameStarted;
-  }
-
-  setUsersList(usersList: any[]) {
-    this.UsersList = usersList;
-    // Save usersList to localStorage
-    localStorage.setItem('usersList', JSON.stringify(usersList));
-  }
-
-  getUsersList() {
-    return this.UsersList;
+  constructor(
+    private matSnackbar: MatSnackBar,
+    ){
+    this.gameId = localStorage.getItem(this.GAME_ID_KEY);
+    this.nickname = localStorage.getItem(this.NICKNAME_KEY);
   }
 
   getGameId() {
-    return this.GameId;
+    return this.gameId;
   }
 
-  setGameId(gameId) {
-    this.GameId = gameId;
+  setGameId(gameId: string) {
+    this.gameId = gameId;
     // Save gameId to localStorage
     localStorage.setItem(this.GAME_ID_KEY, gameId);
   }
 
   getNickname() {
-    return this.Nickname;
+    return this.nickname;
   }
 
-  setNickname(nickname) {
-    this.Nickname = nickname;
+  setNickname(nickname: string) {
+    this.nickname = nickname;
     // Save nickname to localStorage
     localStorage.setItem(this.NICKNAME_KEY, nickname);
+  }
+
+  openDialog(message)
+  {
+    this.matSnackbar.open(message, 'Aizvērt', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+    return;
   }
 }

@@ -39,22 +39,6 @@
   }
 }
 
-/* @media (max-width: 768px) {
-  .grid {
-    width: 400px;
-    height: 400px;
-    margin: 150px 0;
-  }
-  .box {
-    width: 400px !important;
-    height: 400px !important;
-    margin: 150px 0 !important;
-  }
-  .players-list {
-    margin: 150px 15px !important;
-  }
-} */
-
 .grid-computer {
   aspect-ratio: 1/ 1;
   display: flex;

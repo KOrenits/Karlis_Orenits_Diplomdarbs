@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
-import { ObserversModule } from '@angular/cdk/observers';
 
 @Injectable({
   providedIn: 'root',
@@ -47,23 +45,23 @@ export class SocketioService {
     this.socket.emit('startGame', { gameId: gameId, isGameStarted: isGameStarted });
   }
 
-recieveStartGame() {
-  return new Observable((observer) => {
-    this.socket.on('startGame', ({ tilesList, isGameStarted }) => {
-      observer.next({ tilesList, isGameStarted });
+  recieveStartGame() {
+    return new Observable((observer) => {
+      this.socket.on('startGame', ({ tilesList, isGameStarted }) => {
+        observer.next({ tilesList, isGameStarted });
+      });
     });
-  });
-}
+  }
 
-recieveGameUpdate() {
-  return new Observable((observer) => {
-    this.socket.on('gameUpdate', ({ tilesList, usersList, currentUser, isGameOver }) => {
-      observer.next({ tilesList, usersList, currentUser,  isGameOver });
+  recieveGameUpdate() {
+    return new Observable((observer) => {
+      this.socket.on('gameUpdate', ({ tilesList, usersList, currentUser, isGameOver }) => {
+        observer.next({ tilesList, usersList, currentUser,  isGameOver });
+      });
     });
-  });
-}
+  }
 
-  requestUsers(gameId: string): void {
+  requestUsers(gameId) {
     this.socket.emit('requestUsers', { gameId });
   }
 
@@ -71,19 +69,4 @@ recieveGameUpdate() {
   {
     this.socket.emit('leave', {usersList: usersList, leavingUser: leavingUser, gameId: gameId});
   }
-
-  recieveCurrentState(){
-    return new Observable((observer) => {
-      this.socket.on('currentState', ({ isGameStarted }) => {
-        if (isGameStarted != undefined) {
-          observer.next({ isGameStarted });
-        }
-      });
-    });
-  }
-  
-  currentStateUpdate(gameId) {
-    this.socket.emit('currentState', {gameId});
-  }
-
 }

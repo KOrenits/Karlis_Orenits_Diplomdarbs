@@ -12,13 +12,13 @@
 				<ng-container *ngFor="let tile of tiles">
 					<div class="grid-computer defaultTile" *ngIf="!tile.selected && pageUser.skippedTurn != 1" (click)="clickTile(tile)"></div>
 					<div *ngIf="tile.selected" class="grid-computer" [ngClass]="{ 
-																				'shipTile': tile.tileType == 'ship',
-																				'emptyTile': tile.tileType == 'empty',
-																				'goldenShipTile': tile.tileType == 'goldenShip',
-																				'pirateTile': tile.tileType == 'pirate',
-																				'mermaidTile': tile.tileType == 'mermaid',
-																				'krakenTile': tile.tileType == 'kraken'
-																				}">
+						'shipTile': tile.tileType == 'ship',
+						'emptyTile': tile.tileType == 'empty',
+						'goldenShipTile': tile.tileType == 'goldenShip',
+						'pirateTile': tile.tileType == 'pirate',
+						'mermaidTile': tile.tileType == 'mermaid',
+						'krakenTile': tile.tileType == 'kraken'
+						}">
 					</div>
 				</ng-container>
 			</ng-container>
@@ -30,18 +30,17 @@
 					<span *ngIf="pageUser.playerId == i" class="checkmark">(Jūs)&nbsp;</span>
 					<span *ngIf="pageUser.playerId != i"></span>
 					<span [ngClass]="{
-									'userTurn': user.currentTurn,
-									'userNoTurn': !user.currentTurn
-          							}">{{ user.nickname }}</span>
+						'userTurn': user.currentTurn,
+						'userNoTurn': !user.currentTurn
+						}">{{ user.nickname }}</span>
 					&nbsp;<span class="pipe">|</span>&nbsp;<span class="points">{{ user.points }}</span>
 					<span *ngIf="user.skippedTurn > 0" class="checkmark"> izlaiž</span>
 					<span *ngIf="user.skippedTurn == 0"></span>
-					<span *ngIf="user.extraTurn > 0" class="checkmark"> gājieni - {{user.extraTurn + 1}} </span>
+					<span *ngIf="user.extraTurn > 0" class="checkmark">  gājieni - {{user.extraTurn}} </span>
 					<span *ngIf="user.extraTurn == 0"></span>
 				</li>
 			</ul>
 		</div>
-		
 	</div>
 	<div class="main-container" *ngIf="!isGameStarted">
 		<div class="box">
@@ -65,82 +64,3 @@
 		<p>Foggy sea © 2023</p>
 	</div>
 </div>
-
-<!-- <div class="center" >
-  <button mat-raised-button (click)="startGame()" *ngIf="!isGameStarted && user.isHost">Start game</button>
-</div> -->
-<!--  <ng-container *ngFor="let user of usersList">
-  <div class="center" *ngIf="!isGameStarted && user.isHost">
-    <button mat-raised-button (click)="startGame()">Start game</button>
-  </div>
-</ng-container> -->
-
-<!-- <div class="players-list" >
-      <div *ngIf="!joined">
-        <input type="text" [(ngModel)]="nickname" placeholder="Enter your nickname" />
-        <input type="text" [(ngModel)]="room" placeholder="Enter the room name" />
-        <button (click)="joinRoom()">Join</button>
-      </div>
-      <div *ngIf="joined">
-        <h2>Users in {{ room }}</h2>
-        <ul>
-          <li *ngFor="let user of users">{{ user.nickname }}</li>
-        </ul>
-      </div>
-    </div> -->
-
-
-<!-- <div id="users" class=" players-list">
-    lalala
-  </div>
-
-  <button mat-raised-button class="nextgame">
-    Next game
-  </button> -->
-
-<!-- <div (click)="tilePressed(tile)" class="grid-computer" [ngClass]="{'defaultTile': !tile.selected,
-'shipTile': (tile.selected == true) && (tile.tileType == tileTypes.ship)}"></div> -->
-
-<!-- <ng-container *ngFor="let something of tilesList">
-  <ng-container *ngFor="let word of something">
-  <div class="word" *ngIf="!word.selected" (click)="revealSquare(word)" > </div>
-
-  <div
-    class="word"
-    *ngIf="word.selected"
-    [ngStyle]="{
-      'background-color': 'black',
-      'border-color': 'black'
-    }"
-  >
-  </div>
-</ng-container>
-</ng-container> -->
-
-<!-- <div class="game">
-  <div class="center" *ngIf="!words">
-    <button mat-raised-button (click)="startGame()">Start game</button>
-  </div>
-
-  <div class="flex-container">
-    <ng-container *ngFor="let word of words">
-      <div
-        class="word"
-        (click)="clickWord(word)"
-      >
-      </div>
-      <div
-        class="word"
-        *ngIf="word.selected"
-        [ngStyle]="{
-          'background-color': 'black',
-          'border-color': 'black'
-        }"
-      >
-      </div>
-    </ng-container>
-  </div>
-  <button mat-raised-button (click)="nextGame()" class="nextgame" *ngIf="words">
-    Next game
-  </button>
-</div> -->

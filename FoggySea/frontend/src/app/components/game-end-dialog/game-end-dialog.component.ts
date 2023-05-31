@@ -8,7 +8,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class GameEndDialogComponent {
   usersList: any[]; // Define a property to hold the usersList data
-  topPlace: any[];
   highestPoints = 0;
 
   constructor(
@@ -18,7 +17,6 @@ export class GameEndDialogComponent {
 
   {
     this.usersList = data.usersList;
-
     this.usersList.forEach(user => {
       if (user.points >= this.highestPoints) {
         this.highestPoints = user.points;

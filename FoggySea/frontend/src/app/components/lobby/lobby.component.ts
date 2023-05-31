@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 import { SharedDataService } from 'src/app/services/shared-data.service';
 import { SocketioService } from 'src/app/services/socketio.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { GameRulesDialogComponent } from '../game-rules-dialog/game-rules-dialog.component';
 
@@ -14,95 +13,109 @@ import { GameRulesDialogComponent } from '../game-rules-dialog/game-rules-dialog
 })
 export class LobbyComponent implements OnInit {
 
+  usersList;
+  nickname;
+  gameId;
   constructor(
     private router: Router,
     private sharedDataService: SharedDataService,
     private socketIoService: SocketioService,
-    private matsnackBar: MatSnackBar,
     private matDialog: MatDialog
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.socketIoService.connect();
+    this.recieveJoinedPlayers();
+  }
 
   createGame() {
-    const uuid = uuidv4();
-    const nickname = (document.getElementById('nickname') as HTMLInputElement).value;
-    if (!nickname) {
-      // Game ID is empty
-      this.matsnackBar.open('Lūdzu ievadiet segvārdu', 'Aizvērt', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-      });
-      return;
+    this.gameId = uuidv4();
+    this.nickname = (document.getElementById('nickname') as HTMLInputElement).value;
+    if(this.nickNameValidation(this.nickname))
+    {
+      this.socketIoService.joinRoom(this.gameId, this.nickname);
+      this.sharedDataService.setNickname(this.nickname);
+      this.sharedDataService.setGameId(this.gameId);
+      this.router.navigate(['/game', this.gameId]);
     }
-
-  this.sharedDataService.setNickname(nickname);
-  this.sharedDataService.setGameId(uuid);
-    
-  this.router.navigate(['/game', uuid]);
   }
 
   joinGame() {
-    const nickname = (document.getElementById('nickname') as HTMLInputElement).value;
+    this.nickname = (document.getElementById('nickname') as HTMLInputElement).value;
     const gameLinkInput = document.getElementById('gamelink') as HTMLInputElement;
-    const gameId = gameLinkInput.value.trim().split('/').pop();
-
-
-      if (!nickname) {
-        // NickName is empty
-        this.matsnackBar.open('Lūdzu ievadiet segvārdu', 'Aizvērt', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-        });
-        return;
-      }
-  
-      const usersList = this.sharedDataService.getUsersList();
-      const usersCount = usersList.length;
-      for (let i = 0; i < usersCount; i++) {
-        if (usersList[i].nickname == nickname) {
-          this.matsnackBar.open('Šajā istabā jau ir lietotājs ar šadu segvārdu', 'Aizvērt', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-          });
-          return;
-        }
-      }
-  
-  
-      if (!gameId) {
-        // Game ID is empty
-        this.matsnackBar.open('Lūdzu ievadiet spēles ID', 'Aizvērt', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-        });
-        return;
-      }
-  
-    if (usersCount > 5) {
-      // Maximum user count reached
-      this.matsnackBar.open('Nevar pievienoties istabai, jo ir sasniegts maksimālais spelētāju skaits', 'Aizvērt', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-      });
+    this.gameId = gameLinkInput.value.trim().split('/').pop();
+    if(!this.nickNameValidation(this.nickname))
+    {
       return;
     }
-    
-      this.sharedDataService.setNickname(nickname);
-      this.sharedDataService.setGameId(gameId);
-      // Navigate to the game component with the game ID as a parameter
-      this.router.navigate(['/game', gameId]);
+    else if (!this.gameId) {
+      this.sharedDataService.openDialog('Lūdzu ievadiet spēles ID');
+
+      return;
+    }
+    var doOneTime = true;
+    this.socketIoService.joinRoom(this.gameId, this.nickname);
+    this.socketIoService.recieveJoinedPlayers().subscribe((usersList) => {
+      if(doOneTime)
+      {
+        doOneTime = false;
+        if (usersList.length > 6) {
+          this.sharedDataService.openDialog('Nevar pievienoties istabai, jo ir sasniegts maksimālais spelētāju skaits');
+          this.leaveRoom(usersList[usersList.length - 1]);
+
+          return;
+        }
+        else
+        {
+          const duplicateUser = usersList.filter((user) => user.nickname === this.nickname);
+          if (duplicateUser.length>1) {
+            this.sharedDataService.openDialog('Šajā istabā jau ir lietotājs ar šādu segvārdu');
+            this.leaveRoom(duplicateUser[1]);
+
+            return;
+          }
+          else
+          {
+            this.sharedDataService.setNickname(this.nickname);
+            this.sharedDataService.setGameId(this.gameId);
+            this.router.navigate(['/game', this.gameId]);
+          }
+        }
+      }
+    });
+  }
+
+
+  recieveJoinedPlayers() {
+    this.socketIoService.recieveJoinedPlayers().subscribe((usersList) => {
+      this.usersList = usersList;
+    });
+  }
+
+  nickNameValidation(nickname)
+  {
+    if (!nickname) {
+      this.sharedDataService.openDialog('Lūdzu ievadiet segvārdu');
+
+      return false;
+    }
+    const nicknameLength = nickname.trim().length;
+    if (nicknameLength <3 || nicknameLength > 8) {
+      this.sharedDataService.openDialog('segvārdam jābūt 3-8 simbolus garam');
+
+      return false;
+    }
+    return true;
+  }
+
+  leaveRoom(user){
+    this.socketIoService.leaveRoom(this.usersList, user, this.gameId);
+    this.router.navigate(['']);
   }
    
   openRules() {
     this.matDialog.open(GameRulesDialogComponent, {
-      width: '1000px', // Set the width of the dialog
-      // Add any other configuration options as needed
+      width: '1000px',
     });
   }
 }

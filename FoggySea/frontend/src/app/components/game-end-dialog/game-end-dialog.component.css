@@ -22,7 +22,7 @@ ul li {
   color: #000;
 }
 
-ul li:first-child {
+.colored {
   color: #ff7b00;
   font-weight: bold;
 }
