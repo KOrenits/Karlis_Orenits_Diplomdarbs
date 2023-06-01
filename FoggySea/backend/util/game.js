@@ -1,16 +1,3 @@
-
-/* const tileTypes = Object.freeze({
-    default: Symbol("default"),
-    ship: Symbol("ship"),
-    empty: Symbol("empty"),
-    goldenShip: Symbol("goldenShip"),
-    pirate: Symbol("pirate"),
-    mermaid: Symbol("mermaid"),
-    kraken: Symbol("kraken")
-})  */
-
-
-
 const tileTypes = Object.freeze({
     default: "default",
     ship: "ship",
