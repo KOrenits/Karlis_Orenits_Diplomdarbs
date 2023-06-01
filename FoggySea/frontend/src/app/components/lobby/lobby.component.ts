@@ -44,13 +44,12 @@ export class LobbyComponent implements OnInit {
     this.nickname = (document.getElementById('nickname') as HTMLInputElement).value;
     const gameLinkInput = document.getElementById('gamelink') as HTMLInputElement;
     this.gameId = gameLinkInput.value.trim().split('/').pop();
+    if(!this.gameIdValidation(this.gameId))
+    {
+      return
+    }
     if(!this.nickNameValidation(this.nickname))
     {
-      return;
-    }
-    else if (!this.gameId) {
-      this.sharedDataService.openDialog('Lūdzu ievadiet spēles ID');
-
       return;
     }
     var doOneTime = true;
@@ -102,6 +101,22 @@ export class LobbyComponent implements OnInit {
     const nicknameLength = nickname.trim().length;
     if (nicknameLength <3 || nicknameLength > 8) {
       this.sharedDataService.openDialog('segvārdam jābūt 3-8 simbolus garam');
+
+      return false;
+    }
+    return true;
+  }
+
+  gameIdValidation(gameId)
+  {
+    if (!gameId) {
+      this.sharedDataService.openDialog('Lūdzu ievadiet spēles ID');
+
+      return false;
+    }
+    const nicknameLength = this.gameId.trim().length;
+    if (nicknameLength != 36) {
+      this.sharedDataService.openDialog('ID ir ievadīts nepareizi');
 
       return false;
     }
